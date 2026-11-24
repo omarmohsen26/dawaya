@@ -1,4 +1,4 @@
-const CACHE = 'dawaya-v1';
+const CACHE = 'dawaya-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-180.png'];
 
