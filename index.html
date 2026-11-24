@@ -50,6 +50,12 @@ main{flex:1;padding:10px 16px 120px;animation:fadein .35s var(--spring)}
 /* cards */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
   padding:16px;margin-bottom:12px;transition:transform .25s var(--spring),background .35s,border-color .35s}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+main .card{animation:pop .38s var(--spring) backwards}
+main .card:nth-of-type(2){animation-delay:.045s}
+main .card:nth-of-type(3){animation-delay:.09s}
+main .card:nth-of-type(4){animation-delay:.135s}
+main .card:nth-of-type(n+5){animation-delay:.18s}
 .pressable:active{transform:scale(.975)}
 
 /* today progress */
@@ -72,8 +78,9 @@ main{flex:1;padding:10px 16px 120px;animation:fadein .35s var(--spring)}
 .dose .name{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dose .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
 .dose .acts{display:flex;gap:8px}
-.pillbtn{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-  font-size:17px;background:var(--card2);border:1px solid var(--line);transition:all .2s var(--spring)}
+.pillbtn{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+  font-size:19px;background:var(--card2);border:1px solid var(--line);transition:all .2s var(--spring)}
+.pillbtn:active{transform:scale(.9)}
 .pillbtn.ok.on{background:color-mix(in srgb,var(--ok) 20%,transparent);border-color:var(--ok);color:var(--ok)}
 .pillbtn.skip.on{background:color-mix(in srgb,var(--danger) 16%,transparent);border-color:var(--danger);color:var(--danger)}
 .dose.taken{opacity:.62}
@@ -157,8 +164,8 @@ main{flex:1;padding:10px 16px 120px;animation:fadein .35s var(--spring)}
 /* fab */
 .fab{position:fixed;bottom:calc(env(safe-area-inset-bottom) + 78px);inset-inline-start:50%;transform:translateX(50%);
   z-index:31;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;font-weight:800;font-size:15px;padding:14px 22px;border-radius:999px;
-  box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 40%,transparent);transition:transform .2s var(--spring)}
+  color:#fff;font-weight:800;font-size:15px;padding:15px 24px;border-radius:999px;
+  box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 40%,transparent),0 2px 6px rgba(0,0,0,.18);transition:transform .2s var(--spring),box-shadow .2s}
 .fab:active{transform:translateX(50%) scale(.94)}
 .fab.hidden{display:none}
 
@@ -506,6 +513,18 @@ function renderSettings(){
     <div class="setrow"><div><div class="t">تنبيه قربان الدواء</div><div class="d">يفكرك تجدد العلبة لما العدد يقل</div></div>
       <button class="switch ${p.refill?'on':''}" onclick="toggleRefill()"></button></div>
   </div>
+  <div class="sectionlabel">الخصوصية والبيانات</div>
+  <div class="card" style="padding:0">
+    <div class="setrow"><div><div class="t">بياناتك على موبايلك بس</div><div class="d">مفيش حساب ولا سيرفر ولا تتبع. اقرأ التفاصيل</div></div>
+      <button class="linkrow" onclick="showPrivacy()">الخصوصية</button></div>
+    <div class="setrow"><div><div class="t">تصدير بياناتك</div><div class="d">نسخة احتياطية (JSON) تنزل على موبايلك</div></div>
+      <button class="linkrow" onclick="exportData()">تصدير</button></div>
+    <div class="setrow"><div><div class="t">استيراد نسخة احتياطية</div><div class="d">رجّع أدويتك وسجلّك من ملف تصدير</div></div>
+      <button class="linkrow" onclick="document.getElementById('importfile').click()">استيراد</button>
+      <input type="file" id="importfile" accept="application/json,.json" style="display:none" onchange="importData(event)"></div>
+    <div class="setrow"><div><div class="t">مسح كل البيانات</div><div class="d">يمسح الأدوية والسجل من على موبايلك نهائيًا</div></div>
+      <button class="linkrow" style="color:var(--danger)" onclick="confirmReset()">مسح</button></div>
+  </div>
   <div class="sectionlabel">عام</div>
   <div class="card" style="padding:0">
     <div class="setrow"><div><div class="t">شارك دوايا</div><div class="d">ابعته لحد بياخد دواء بانتظام</div></div>
@@ -513,11 +532,46 @@ function renderSettings(){
     <div class="setrow"><div><div class="t">تنبيه لحد من العيلة (قريبًا)</div><div class="d">مزامنة مع موبايل قريبك عشان يطمن إنك خدت دواك</div></div>
       <span class="tag">قريبًا</span></div>
     <div class="setrow"><div><div class="t">تنبيه طبي</div><div class="d">دوايا للتذكير فقط وليس بديلًا عن استشارة الطبيب أو الصيدلي. مواعيد وجرعات الدواء مسؤوليتك أنت وطبيبك.</div></div></div>
-    <div class="setrow"><div><div class="t">مسح كل البيانات</div><div class="d">يمسح الأدوية والسجل من على موبايلك</div></div>
-      <button class="linkrow" style="color:var(--danger)" onclick="confirmReset()">مسح</button></div>
   </div>
-  <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">دوايا • الإصدار ١٫١</div>`;
+  <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">دوايا • الإصدار ١٫٢</div>`;
 }
+window.showPrivacy=()=>{
+  showModal(`<h4>🔒 الخصوصية في دوايا</h4>
+  <p style="text-align:start">
+  • كل بياناتك (أسماء الأدوية والمواعيد والسجل واسمك) متخزنة على موبايلك بس، في ذاكرة المتصفح. مفيش حساب ولا تسجيل، ومفيش أي حاجة بتتبعت لأي سيرفر.<br><br>
+  • مفيش تتبع ولا تحليلات ولا طرف تالت بيشوف بياناتك.<br><br>
+  • لو مسحت بيانات التطبيق أو المتصفح، بياناتك بتتمسح نهائيًا. عشان كده خد نسخة احتياطية من «تصدير بياناتك» كل فترة.<br><br>
+  • الإعلانات اللي هتظهر مستقبلًا هتيجي من شبكة إعلانية خارجية (زي AdMob) وليها سياسة خصوصية خاصة بيها، ومش هنشارك معاها أي بيانات عنك.<br><br>
+  • دوايا أداة تذكير فقط وليس بديلًا عن استشارة الطبيب أو الصيدلي.
+  </p>
+  <div class="btnrow"><button class="btn primary" onclick="closeModal()">تمام</button></div>`);
+};
+window.exportData=()=>{
+  const payload={app:'dawaya',version:2,exportedAt:new Date().toISOString(),data:S};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='dawaya-backup-'+todayKey()+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  vibrate(10);toast('نزلت النسخة الاحتياطية 💾');
+};
+window.importData=(ev)=>{
+  const f=ev.target.files&&ev.target.files[0]; if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const obj=JSON.parse(rd.result);
+      const d=(obj&&obj.app==='dawaya'&&obj.data)?obj.data:obj;
+      if(!d||!Array.isArray(d.meds)||typeof d.log!=='object')throw 0;
+      S=d; if(!S.profile)S.profile=fresh().profile; if(!S.notified)S.notified={};
+      save();applyTheme();applyAccent();render();
+      toast('رجعت بياناتك ✅');
+    }catch(e){toast('الملف ده مش نسخة دوايا صالحة ⚠️');}
+    ev.target.value='';
+  };
+  rd.readAsText(f);
+};
 window.askName=()=>{
   showModal(`<h4>اسمك في التحية</h4>
     <div class="field"><input type="text" id="mname" value="${esc(S.profile.name)}" maxlength="30" placeholder="اسمك"></div>
