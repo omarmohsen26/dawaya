@@ -24,11 +24,9 @@
   --spring:cubic-bezier(.22,1,.36,1);
 }
 html[data-theme="light"]{
-  --bg:#F6F4EF; --card:#FFFFFF; --card2:#F5F3EE; --line:rgba(15,20,35,.07);
-  --text:#1A1E28; --muted:#71767F;
+  --bg:#F3F4F7; --card:#FFFFFF; --card2:#F7F8FA; --line:rgba(15,20,35,.08);
+  --text:#131722; --muted:#6B7280;
 }
-html[data-theme="light"] .card{box-shadow:0 1px 4px rgba(20,25,40,.05)}
-html[data-theme="light"] .tabbarin{box-shadow:0 -4px 24px rgba(20,25,40,.06)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{
@@ -80,25 +78,6 @@ main{flex:1;padding:10px 16px 120px;animation:fadein .35s var(--spring)}
 .dose.taken .name{text-decoration:line-through;text-decoration-color:var(--muted);text-decoration-thickness:1.5px}
 .timechip{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);background:var(--card2);
   border:1px solid var(--line);border-radius:9px;padding:4px 9px;min-width:58px;text-align:center}
-
-/* week strip */
-.week{display:flex;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
-.wday{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
-.wdot{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:800;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
-.wdot.full{background:color-mix(in srgb,var(--ok) 20%,transparent);border-color:var(--ok);color:var(--ok)}
-.wdot.part{background:color-mix(in srgb,var(--warn) 16%,transparent);border-color:var(--warn);color:var(--warn)}
-.wdot.miss{background:color-mix(in srgb,var(--danger) 10%,transparent);border-color:color-mix(in srgb,var(--danger) 35%,transparent);color:var(--danger)}
-.wdot.today{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--accent)}
-.wlbl{font-size:10px;color:var(--muted);font-weight:700}
-
-/* ad placeholder (mockup - AdMob slot goes here later) */
-.adcard{margin:14px 0 2px;border:1.5px dashed var(--line);border-radius:var(--radius);
-  padding:16px 14px;text-align:center;color:var(--muted);background:transparent}
-.adcard .adtag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;
-  border:1px solid var(--line);border-radius:6px;padding:2px 8px;margin-bottom:8px;color:var(--muted)}
-.adcard .adt{font-size:13.5px;font-weight:700}
-.adcard .ads{font-size:11.5px;margin-top:4px;opacity:.75;line-height:1.6}
 
 /* banner */
 .banner{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;border-radius:16px;margin-bottom:12px;
@@ -341,38 +320,6 @@ function unconsume(medId){
   const m=S.meds.find(x=>x.id===medId);
   if(m&&typeof m.pillsLeft==='number'){m.pillsLeft++;}
 }
-function calcStreak(){
-  let streak=0;
-  for(let i=0;i<90;i++){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const ds=dosesFor(d);
-    if(!ds.length)continue;
-    const t=ds.filter(x=>x.status==='taken').length;
-    if(t===ds.length){streak++;}
-    else if(i===0){continue;}
-    else break;
-  }
-  return streak;
-}
-function weekStrip(){
-  let html='<div class="week">';
-  for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const ds=dosesFor(d);
-    const t=ds.filter(x=>x.status==='taken').length;
-    const s=ds.filter(x=>x.status==='skipped').length;
-    let cls='',mark='·';
-    if(ds.length){
-      if(t===ds.length){cls='full';mark='✓';}
-      else if(t+s===ds.length&&t>0){cls='part';mark=toAr(t);}
-      else if(t+s===ds.length){cls='miss';mark='✕';}
-      else if(i===0){cls='part';mark=toAr(t);}
-      else{cls='miss';mark=toAr(t+s);}
-    }
-    html+=`<div class="wday"><div class="wdot ${cls} ${i===0?'today':''}">${mark}</div><div class="wlbl">${d.toLocaleDateString('ar-EG',{weekday:'narrow'})}</div></div>`;
-  }
-  return html+'</div>';
-}
 function nextDose(){
   const now=new Date(), nowHm=pad(now.getHours())+':'+pad(now.getMinutes());
   for(const d of dosesFor(now))if(d.time>nowHm&&!d.status)return{...d,when:'اليوم '+arTime(d.time)};
@@ -406,15 +353,14 @@ function renderToday(){
   const missed=ds.filter(d=>!d.status&&d.time<pad(new Date().getHours())+':'+pad(new Date().getMinutes())&&d.time<pad((new Date().getHours()+23)%24)+':'+pad(new Date().getMinutes())&&pastMin(d.time)>60);
   const low=S.meds.filter(m=>typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5));
   const circ=2*Math.PI*36;
-  let html=`<div class="card"><div class="hero">
+  let html=`<div class="card hero">
     <div class="ring"><svg width="86" height="86"><circle class="track" cx="43" cy="43" r="36" fill="none" stroke-width="8"/>
     <circle class="bar" cx="43" cy="43" r="36" fill="none" stroke-width="8" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pct/100)}"/></svg>
     <div class="pct">${toAr(pct)}٪</div></div>
     <div class="heroinfo"><h2>${ds.length?`خدت ${toAr(taken)} من ${toAr(ds.length)} جرعات`:'مفيش جرعات النهاردة'}</h2>
     <p>${pct===100&&ds.length?'يوم كامل، برافو عليك 🎉':ds.length?'كمل، كل جرعة بتوثّق التزامك.':'استريح، مفيش حاجة مجدولة.'}</p>
     ${nd?`<span class="nextdose">⏰ الجرعة الجاية: ${esc(nd.med.name)} ${nd.when}</span>`:''}
-    ${calcStreak()>0?`<span class="nextdose" style="background:color-mix(in srgb,var(--warn) 13%,transparent);color:var(--warn)">🔥 ${toAr(calcStreak())} ${calcStreak()===1?'يوم':'أيام'} التزام ورا بعض</span>`:''}
-    </div></div>${weekStrip()}</div>`;
+    </div></div>`;
   if(missed.length)html+=`<div class="banner warn">⚠️<div>عندك ${toAr(missed.length)} ${missed.length===1?'جرعة فاتت':'جرعات فاتت'} من غير تسجيل. سجّلها لو خدتها، أو تخطَّها.</div></div>`;
   for(const m of low)html+=`<div class="banner warn">🔔<div><b>${esc(m.name)}</b> قرب يخلص (فاضل ${toAr(m.pillsLeft)} ${m.unit}). جدّد العلبة في أقرب صيدلية.</div></div>`;
   html+=`<div class="dayhead">جدول النهاردة</div>`;
@@ -428,10 +374,6 @@ function renderToday(){
         <button class="pillbtn ok ${d.status==='taken'?'on':''}" onclick="act('${d.key}','${d.med.id}','${d.time}','taken')" aria-label="خدتها">✓</button>
         <button class="pillbtn skip ${d.status==='skipped'?'on':''}" onclick="act('${d.key}','${d.med.id}','${d.time}','skipped')" aria-label="تخطيتها">✕</button>
       </div></div>`;
-  }
-  if(ds.length){
-    html+=`<div class="adcard"><span class="adtag">إعلان</span><div class="adt">مساحة إعلانية صغيرة</div>
-    <div class="ads">هنا هيظهر إعلان بسيط يساعدنا نخلي دوايا مجاني للكل.<br>مش هيظهر أبدًا فوق أزرار الجرعات أو يحجبها.</div></div>`;
   }
   view.innerHTML=html;
 }
@@ -478,8 +420,6 @@ function renderHistory(){
     html+=`<div class="barcol"><div class="bar ${x.n?'':'none'}" style="height:${x.n?h+'%':'3px'}" title="${x.t}/${x.n}"></div><div class="barday">${x.d.toLocaleDateString('ar-EG',{weekday:'narrow'})}</div></div>`;
   }
   html+=`</div></div><div class="banner info">💡<div>الالتزام بالدواء في معايده هو أهم حاجة لمفعوله. لو نسيت جرعة، سجّلها من صفحة اليوم.</div></div>`;
-  html+=`<div class="adcard"><span class="adtag">إعلان</span><div class="adt">مساحة إعلانية صغيرة</div>
-  <div class="ads">إعلان بسيط تحت السجل، بعيد عن أي زرار مهم.</div></div>`;
   view.innerHTML=html;
 }
 
@@ -516,7 +456,7 @@ function renderSettings(){
     <div class="setrow"><div><div class="t">مسح كل البيانات</div><div class="d">يمسح الأدوية والسجل من على موبايلك</div></div>
       <button class="linkrow" style="color:var(--danger)" onclick="confirmReset()">مسح</button></div>
   </div>
-  <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">دوايا • الإصدار ١٫١</div>`;
+  <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">دوايا • الإصدار ١٫٠</div>`;
 }
 window.askName=()=>{
   showModal(`<h4>اسمك في التحية</h4>
