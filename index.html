@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B0D12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="دوايا">
+<title>دوايا - تذكير الدواء</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#10B981; --accent2:#059669;
+  --bg:#0B0D12; --card:#161A23; --card2:#1D222E; --line:rgba(255,255,255,.07);
+  --text:#F3F5F9; --muted:#8B93A5; --danger:#F87171; --warn:#FBBF24; --ok:#34D399;
+  --radius:20px;
+  --spring:cubic-bezier(.22,1,.36,1);
+}
+html[data-theme="light"]{
+  --bg:#F3F4F7; --card:#FFFFFF; --card2:#F7F8FA; --line:rgba(15,20,35,.08);
+  --text:#131722; --muted:#6B7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  min-height:100dvh;overscroll-behavior:none;transition:background .35s,color .35s;
+}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select{font-family:inherit}
+#app{max-width:520px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+
+/* header */
+header{padding:calc(env(safe-area-inset-top) + 18px) 20px 8px;position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.greet{font-size:15px;color:var(--muted);font-weight:500}
+.htitle{font-size:30px;font-weight:800;letter-spacing:-.3px;margin-top:2px}
+main{flex:1;padding:10px 16px 120px;animation:fadein .35s var(--spring)}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin-bottom:12px;transition:transform .25s var(--spring),background .35s,border-color .35s}
+.pressable:active{transform:scale(.975)}
+
+/* today progress */
+.hero{display:flex;align-items:center;gap:18px}
+.ring{flex:none;width:86px;height:86px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .track{stroke:var(--line)}
+.ring .bar{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .7s var(--spring)}
+.ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px}
+.heroinfo h2{font-size:19px;font-weight:800;margin-bottom:3px}
+.heroinfo p{font-size:13.5px;color:var(--muted);line-height:1.55}
+.nextdose{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:6px 12px;border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-size:13px;font-weight:700}
+
+/* dose rows */
+.dayhead{font-size:14px;font-weight:700;color:var(--muted);margin:18px 4px 8px}
+.dose{display:flex;align-items:center;gap:13px;padding:14px 16px}
+.dose .dot{flex:none;width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.dose .info{flex:1;min-width:0}
+.dose .name{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dose .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.dose .acts{display:flex;gap:8px}
+.pillbtn{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;background:var(--card2);border:1px solid var(--line);transition:all .2s var(--spring)}
+.pillbtn.ok.on{background:color-mix(in srgb,var(--ok) 20%,transparent);border-color:var(--ok);color:var(--ok)}
+.pillbtn.skip.on{background:color-mix(in srgb,var(--danger) 16%,transparent);border-color:var(--danger);color:var(--danger)}
+.dose.taken{opacity:.62}
+.dose.taken .name{text-decoration:line-through;text-decoration-color:var(--muted);text-decoration-thickness:1.5px}
+.timechip{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);background:var(--card2);
+  border:1px solid var(--line);border-radius:9px;padding:4px 9px;min-width:58px;text-align:center}
+
+/* banner */
+.banner{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;border-radius:16px;margin-bottom:12px;
+  font-size:13.5px;font-weight:600;line-height:1.6}
+.banner.warn{background:color-mix(in srgb,var(--warn) 12%,transparent);color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
+.banner.info{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
+
+/* med list */
+.medrow{display:flex;align-items:center;gap:13px}
+.medrow .dot{flex:none;width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:21px}
+.medrow .info{flex:1;min-width:0}
+.medrow .name{font-weight:700;font-size:16px}
+.medrow .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.medrow .chev{color:var(--muted);font-size:18px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);margin-inline-start:5px}
+.tag.low{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 40%,transparent);background:color-mix(in srgb,var(--warn) 10%,transparent)}
+
+/* history */
+.bars{display:flex;align-items:flex-end;gap:6px;height:110px;padding:8px 2px 0}
+.barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:22px;border-radius:6px;background:var(--accent);opacity:.9;min-height:4px;transition:height .5s var(--spring)}
+.bar.none{background:var(--card2);border:1px dashed var(--line)}
+.barday{font-size:10.5px;color:var(--muted);font-weight:600}
+.statrow{display:flex;gap:10px;margin-bottom:12px}
+.stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.stat .n{font-size:22px;font-weight:800;color:var(--accent)}
+.stat .l{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600}
+
+/* settings */
+.setrow{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;gap:12px}
+.setrow + .setrow{border-top:1px solid var(--line)}
+.setrow .t{font-weight:700;font-size:15px}
+.setrow .d{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+.seg{display:flex;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
+.seg button{padding:7px 12px;border-radius:9px;font-size:13px;font-weight:700;color:var(--muted);transition:all .2s}
+.seg button.on{background:var(--accent);color:#fff}
+.swatches{display:flex;gap:9px}
+.sw{width:27px;height:27px;border-radius:50%;border:2px solid transparent;transition:transform .2s var(--spring)}
+.sw.on{border-color:#fff;transform:scale(1.18);box-shadow:0 0 0 2px var(--bg),0 0 0 4px currentColor}
+.switch{flex:none;width:50px;height:30px;border-radius:999px;background:var(--card2);border:1px solid var(--line);position:relative;transition:background .25s}
+.switch::after{content:'';position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:all .25s var(--spring);box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.switch.on{background:var(--accent)}
+.switch.on::after{transform:translateX(-20px)}
+.linkrow{color:var(--accent);font-weight:700;font-size:14.5px}
+
+/* tab bar */
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:center;pointer-events:none}
+.tabbarin{pointer-events:auto;display:flex;gap:2px;width:min(520px,100%);
+  background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--line);padding:8px 10px calc(env(safe-area-inset-bottom) + 8px)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-radius:14px;
+  color:var(--muted);font-size:11px;font-weight:700;transition:color .2s}
+.tab svg{width:23px;height:23px}
+.tab.on{color:var(--accent)}
+
+/* fab */
+.fab{position:fixed;bottom:calc(env(safe-area-inset-bottom) + 78px);inset-inline-start:50%;transform:translateX(50%);
+  z-index:31;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-weight:800;font-size:15px;padding:14px 22px;border-radius:999px;
+  box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 40%,transparent);transition:transform .2s var(--spring)}
+.fab:active{transform:translateX(50%) scale(.94)}
+.fab.hidden{display:none}
+
+/* sheet */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:40;
+  opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;bottom:0;left:0;right:0;z-index:41;display:flex;justify-content:center;
+  transform:translateY(105%);transition:transform .45s var(--spring)}
+.sheet.show{transform:none}
+.sheetin{width:min(520px,100%);max-height:88dvh;overflow-y:auto;background:var(--card);
+  border-radius:26px 26px 0 0;border:1px solid var(--line);padding:14px 20px calc(env(safe-area-inset-bottom) + 22px)}
+.grab{width:40px;height:5px;border-radius:99px;background:var(--line);margin:2px auto 14px}
+.sheetin h3{font-size:20px;font-weight:800;margin-bottom:16px}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:7px}
+.field input[type=text],.field input[type=number],.field select{
+  width:100%;background:var(--card2);border:1px solid var(--line);border-radius:14px;
+  padding:13px 15px;color:var(--text);font-size:16px;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus{border-color:var(--accent)}
+.fieldrow{display:flex;gap:10px}
+.fieldrow .field{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:9px 14px;border-radius:12px;background:var(--card2);border:1px solid var(--line);
+  font-size:14px;font-weight:700;color:var(--muted);transition:all .2s var(--spring)}
+.chip.on{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:var(--accent);color:var(--accent)}
+.timechips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.timechip2{display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:11px;
+  background:color-mix(in srgb,var(--accent) 12%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+  color:var(--accent);font-size:14px;font-weight:700}
+.timechip2 button{color:var(--accent);font-size:15px;line-height:1;opacity:.7}
+input[type=time]{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;color:var(--text);font-size:15px;font-family:inherit}
+.btnrow{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;padding:15px;border-radius:16px;font-size:16px;font-weight:800;text-align:center;transition:transform .15s var(--spring)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn.ghost{background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+.btn.danger{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:28px;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+.modal.show{opacity:1;pointer-events:auto}
+.modalcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;max-width:400px;width:100%;
+  transform:scale(.92);transition:transform .3s var(--spring)}
+.modal.show .modalcard{transform:none}
+.modalcard h4{font-size:17px;font-weight:800;margin-bottom:9px}
+.modalcard p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+
+/* toast */
+.toast{position:fixed;top:calc(env(safe-area-inset-top) + 14px);left:50%;transform:translateX(-50%) translateY(-80px);
+  z-index:60;background:var(--card2);border:1px solid var(--line);color:var(--text);padding:11px 20px;border-radius:999px;
+  font-size:14px;font-weight:700;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:transform .4s var(--spring);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* empty */
+.empty{text-align:center;padding:44px 20px;color:var(--muted)}
+.empty .ic{font-size:44px;margin-bottom:12px;opacity:.8}
+.empty h3{color:var(--text);font-size:17px;font-weight:800;margin-bottom:6px}
+.empty p{font-size:13.5px;line-height:1.7}
+
+/* welcome */
+.welcome{position:fixed;inset:0;z-index:70;background:var(--bg);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:30px;text-align:center}
+.welcome.hide{display:none}
+.wlogo{width:92px;height:92px;border-radius:26px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;font-size:44px;margin-bottom:20px;
+  box-shadow:0 14px 40px color-mix(in srgb,var(--accent) 35%,transparent)}
+.welcome h1{font-size:27px;font-weight:800;margin-bottom:8px}
+.welcome .sub{color:var(--muted);font-size:14.5px;line-height:1.8;max-width:330px;margin-bottom:22px}
+.welcome input{width:min(330px,100%);background:var(--card);border:1px solid var(--line);border-radius:15px;
+  padding:14px 16px;color:var(--text);font-size:16px;text-align:center;outline:none;margin-bottom:12px}
+.welcome .fine{font-size:11.5px;color:var(--muted);line-height:1.7;max-width:320px;margin-top:14px}
+.wbtn{width:min(330px,100%);padding:16px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-size:16.5px;font-weight:800}
+.sectionlabel{font-size:13px;font-weight:800;color:var(--muted);margin:16px 4px 8px;letter-spacing:.2px}
+@media (max-width:380px){.htitle{font-size:26px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="greet" id="greet"></div>
+    <div class="htitle" id="htitle">اليوم</div>
+  </header>
+  <main id="view"></main>
+
+  <button class="fab" id="fab"><span style="font-size:19px">+</span> دواء جديد</button>
+
+  <div class="tabbar"><div class="tabbarin">
+    <button class="tab on" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="4"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>اليوم</button>
+    <button class="tab" data-tab="meds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5 3.5 13.5a4.95 4.95 0 1 1 7-7l7 7a4.95 4.95 0 1 1-7 7Z"/><path d="m7 10 7 7"/></svg>أدويتي</button>
+    <button class="tab" data-tab="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3M12 10v8M17 6v12"/></svg>السجل</button>
+    <button class="tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>الإعدادات</button>
+  </div></div>
+
+  <div class="overlay" id="overlay"></div>
+  <div class="sheet" id="sheet"><div class="sheetin" id="sheetin"></div></div>
+  <div class="modal" id="modal"><div class="modalcard" id="modalcard"></div></div>
+  <div class="toast" id="toast"></div>
+
+  <div class="welcome hide" id="welcome">
+    <div class="wlogo">💊</div>
+    <h1>أهلًا بيك في دوايا</h1>
+    <p class="sub">دوايا بيفكّرك بمواعيد دواك ودواء اللي بتحبهم، ويتابع التزامك يوم بيوم. كل بياناتك بتتخزن على موبايلك بس.</p>
+    <input type="text" id="wname" placeholder="اسمك (اختياري)" maxlength="30">
+    <button class="wbtn" id="wstart">يلا نبدأ</button>
+    <p class="fine">دوايا أداة تذكير فقط وليس بديلًا عن استشارة الطبيب أو الصيدلي. بضغطك على "يلا نبدأ" أنت موافق على ذلك.</p>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ============ state ============ */
+const LS='dawaya.v1';
+let S=load();
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(LS));if(s&&s.meds)return s;}catch(e){}
+  return null;
+}
+function fresh(){return {profile:{name:'',theme:'auto',accent:'#10B981',notif:false,refill:true,seen:false},meds:[],log:{},notified:{}};}
+if(!S){S=fresh();}
+function save(){localStorage.setItem(LS,JSON.stringify(S));}
+const $=q=>document.querySelector(q);
+const view=$('#view');
+let tab='today', editId=null;
+
+const ICONS=['💊','🩹','💉','🧴','🩸','🌡️','🫁','🧠','❤️','🦷','👁️','🦴'];
+const COLORS=['#10B981','#3B82F6','#8B5CF6','#F59E0B','#EF4444','#EC4899'];
+const UNITS=['قرص','كبسولة','ملجم','مل','قطرة','حقنة','بخة','ملعقة'];
+const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const DAYS_S=['أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
+
+/* ============ helpers ============ */
+const pad=n=>String(n).padStart(2,'0');
+const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayKey=()=>dkey(new Date());
+function arTime(hm){
+  const [h,m]=hm.split(':').map(Number);
+  const per=h<12?'ص':'م';let hh=h%12;if(hh===0)hh=12;
+  return toAr(hh)+':'+toAr(pad(m))+' '+per;
+}
+function toAr(x){return String(x).replace(/[0-9]/g,d=>'٠١٢٣٤٥٦٧٨٩'[+d]);}
+function arDate(d){return d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||10);}catch(e){}}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2200);}
+
+/* ============ doses ============ */
+function dosesFor(date){
+  const out=[], dow=date.getDay(), dk=dkey(date);
+  for(const m of S.meds){
+    if(m.days&&m.days.length&&!m.days.includes(dow))continue;
+    for(const t of m.times){
+      const k=dk+'|'+m.id+'|'+t;
+      out.push({med:m,time:t,key:k,status:(S.log[dk]&&S.log[dk][m.id+'|'+t])||null});
+    }
+  }
+  out.sort((a,b)=>a.time<b.time?-1:1);
+  return out;
+}
+function logDose(key,medId,time,st){
+  const dk=key.split('|')[0];
+  if(!S.log[dk])S.log[dk]={};
+  const k2=medId+'|'+time;
+  if(S.log[dk][k2]===st){delete S.log[dk][k2];unconsume(medId);}
+  else{
+    const prev=S.log[dk][k2];
+    S.log[dk][k2]=st;
+    if(st==='taken'&&prev!=='taken')consume(medId);
+    if(st!=='taken'&&prev==='taken')unconsume(medId);
+  }
+  save();
+}
+function consume(medId){
+  const m=S.meds.find(x=>x.id===medId);
+  if(m&&typeof m.pillsLeft==='number'&&m.pillsLeft>0){m.pillsLeft--;}
+}
+function unconsume(medId){
+  const m=S.meds.find(x=>x.id===medId);
+  if(m&&typeof m.pillsLeft==='number'){m.pillsLeft++;}
+}
+function nextDose(){
+  const now=new Date(), nowHm=pad(now.getHours())+':'+pad(now.getMinutes());
+  for(const d of dosesFor(now))if(d.time>nowHm&&!d.status)return{...d,when:'اليوم '+arTime(d.time)};
+  const tm=new Date(now);tm.setDate(tm.getDate()+1);
+  const ds=dosesFor(tm);
+  if(ds.length)return{...ds[0],when:'بكرة '+arTime(ds[0].time)};
+  return null;
+}
+
+/* ============ render ============ */
+const TITLES={today:'اليوم',meds:'أدويتي',history:'السجل',settings:'الإعدادات'};
+function render(){
+  $('#htitle').textContent=TITLES[tab];
+  const h=new Date().getHours();
+  const g=h<12?'صباح الخير':h<17?'نهارك سعيد':'مساء الخير';
+  $('#greet').textContent=g+(S.profile.name?' يا '+S.profile.name:'')+' • '+arDate(new Date());
+  $('#fab').classList.toggle('hidden',tab==='settings'||tab==='history');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  ({today:renderToday,meds:renderMeds,history:renderHistory,settings:renderSettings})[tab]();
+}
+
+function renderToday(){
+  const ds=dosesFor(new Date());
+  if(!S.meds.length){
+    view.innerHTML=`<div class="empty"><div class="ic">💊</div><h3>مفيش أدوية لسه</h3><p>اضغط على "دواء جديد" وأضف أول دواء،<br>ودوايا هيفكّرك بمواعيده كل يوم.</p></div>`;
+    return;
+  }
+  const taken=ds.filter(d=>d.status==='taken').length;
+  const pct=ds.length?Math.round(taken/ds.length*100):0;
+  const nd=nextDose();
+  const missed=ds.filter(d=>!d.status&&d.time<pad(new Date().getHours())+':'+pad(new Date().getMinutes())&&d.time<pad((new Date().getHours()+23)%24)+':'+pad(new Date().getMinutes())&&pastMin(d.time)>60);
+  const low=S.meds.filter(m=>typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5));
+  const circ=2*Math.PI*36;
+  let html=`<div class="card hero">
+    <div class="ring"><svg width="86" height="86"><circle class="track" cx="43" cy="43" r="36" fill="none" stroke-width="8"/>
+    <circle class="bar" cx="43" cy="43" r="36" fill="none" stroke-width="8" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pct/100)}"/></svg>
+    <div class="pct">${toAr(pct)}٪</div></div>
+    <div class="heroinfo"><h2>${ds.length?`خدت ${toAr(taken)} من ${toAr(ds.length)} جرعات`:'مفيش جرعات النهاردة'}</h2>
+    <p>${pct===100&&ds.length?'يوم كامل، برافو عليك 🎉':ds.length?'كمل، كل جرعة بتوثّق التزامك.':'استريح، مفيش حاجة مجدولة.'}</p>
+    ${nd?`<span class="nextdose">⏰ الجرعة الجاية: ${esc(nd.med.name)} ${nd.when}</span>`:''}
+    </div></div>`;
+  if(missed.length)html+=`<div class="banner warn">⚠️<div>عندك ${toAr(missed.length)} ${missed.length===1?'جرعة فاتت':'جرعات فاتت'} من غير تسجيل. سجّلها لو خدتها، أو تخطَّها.</div></div>`;
+  for(const m of low)html+=`<div class="banner warn">🔔<div><b>${esc(m.name)}</b> قرب يخلص (فاضل ${toAr(m.pillsLeft)} ${m.unit}). جدّد العلبة في أقرب صيدلية.</div></div>`;
+  html+=`<div class="dayhead">جدول النهاردة</div>`;
+  if(!ds.length)html+=`<div class="empty" style="padding:26px"><p>مفيش جرعات مجدولة النهاردة.</p></div>`;
+  for(const d of ds){
+    html+=`<div class="card dose pressable ${d.status==='taken'?'taken':''}">
+      <span class="timechip">${arTime(d.time)}</span>
+      <div class="dot" style="background:color-mix(in srgb,${d.med.color} 16%,transparent)">${d.med.icon}</div>
+      <div class="info"><div class="name">${esc(d.med.name)}</div><div class="sub">${esc(d.med.dose)} ${esc(d.med.unit)}${typeof d.med.pillsLeft==='number'?' • فاضل '+toAr(d.med.pillsLeft):''}</div></div>
+      <div class="acts">
+        <button class="pillbtn ok ${d.status==='taken'?'on':''}" onclick="act('${d.key}','${d.med.id}','${d.time}','taken')" aria-label="خدتها">✓</button>
+        <button class="pillbtn skip ${d.status==='skipped'?'on':''}" onclick="act('${d.key}','${d.med.id}','${d.time}','skipped')" aria-label="تخطيتها">✕</button>
+      </div></div>`;
+  }
+  view.innerHTML=html;
+}
+function pastMin(hm){const n=new Date();const[dh,dm]=hm.split(':').map(Number);return (n.getHours()*60+n.getMinutes())-(dh*60+dm);}
+window.act=(key,medId,time,st)=>{vibrate(12);logDose(key,medId,time,st);render();
+  if(st==='taken')toast('اتسجلت ✅ بالشفا');
+  const m=S.meds.find(x=>x.id===medId);
+  if(m&&S.profile.refill&&typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5)&&m.pillsLeft>=0)toast('⚠️ '+m.name+' قرب يخلص');
+};
+
+function renderMeds(){
+  if(!S.meds.length){view.innerHTML=`<div class="empty"><div class="ic">🗂️</div><h3>قايمة أدويتك فاضية</h3><p>أضف أدويتك بمواعيدها، وهتلاقيها هنا.</p></div>`;return;}
+  let html='';
+  for(const m of S.meds){
+    const lowT=typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5);
+    html+=`<div class="card medrow pressable" onclick="openSheet('${m.id}')">
+      <div class="dot" style="background:color-mix(in srgb,${m.color} 16%,transparent)">${m.icon}</div>
+      <div class="info"><div class="name">${esc(m.name)}${lowT?'<span class="tag low">قرب يخلص</span>':''}</div>
+      <div class="sub">${esc(m.dose)} ${esc(m.unit)} • ${m.times.map(arTime).join('، ')}<br>
+      <span class="tag">${m.days&&m.days.length?m.days.map(d=>DAYS_S[d]).join(' '):'كل يوم'}</span>${typeof m.pillsLeft==='number'?`<span class="tag">فاضل ${toAr(m.pillsLeft)}</span>`:''}</div></div>
+      <span class="chev">‹</span></div>`;
+  }
+  view.innerHTML=html;
+}
+
+function renderHistory(){
+  const days=[];let totTaken=0,totAll=0,streak=0,streakOn=true;
+  for(let i=13;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=dosesFor(d);const t=ds.filter(x=>x.status==='taken').length;const s=ds.filter(x=>x.status==='skipped').length;
+    days.push({d,t,all:t+s,n:ds.length});
+    if(i>0){totTaken+=t;totAll+=t+s;}
+  }
+  for(let i=0;i<14;i++){const x=days[13-i];
+    if(x.n&&x.t===x.n){if(streakOn)streak++;}else if(x.n){streakOn=false;}}
+  const rate=totAll?Math.round(totTaken/totAll*100):0;
+  let html=`<div class="statrow">
+    <div class="stat"><div class="n">${toAr(rate)}٪</div><div class="l">نسبة الالتزام</div></div>
+    <div class="stat"><div class="n">${toAr(streak)}</div><div class="l">أيام متتالية كاملة 🔥</div></div>
+    <div class="stat"><div class="n">${toAr(totTaken)}</div><div class="l">جرعة مأخوذة</div></div></div>
+    <div class="card"><div class="dayhead" style="margin-top:2px">آخر ١٤ يوم</div><div class="bars">`;
+  for(const x of days){
+    const h=x.all?Math.max(8,Math.round(x.t/x.all*100)):(x.n?8:0);
+    html+=`<div class="barcol"><div class="bar ${x.n?'':'none'}" style="height:${x.n?h+'%':'3px'}" title="${x.t}/${x.n}"></div><div class="barday">${x.d.toLocaleDateString('ar-EG',{weekday:'narrow'})}</div></div>`;
+  }
+  html+=`</div></div><div class="banner info">💡<div>الالتزام بالدواء في معايده هو أهم حاجة لمفعوله. لو نسيت جرعة، سجّلها من صفحة اليوم.</div></div>`;
+  view.innerHTML=html;
+}
+
+function renderSettings(){
+  const p=S.profile;
+  view.innerHTML=`
+  <div class="sectionlabel">التخصيص</div>
+  <div class="card" style="padding:0">
+    <div class="setrow"><div><div class="t">الاسم في التحية</div><div class="d">بيظهر في أعلى الصفحة</div></div>
+      <button class="linkrow" onclick="askName()">${esc(p.name)||'اكتب اسمك'}</button></div>
+    <div class="setrow"><div><div class="t">المظهر</div></div>
+      <div class="seg">
+        <button class="${p.theme==='auto'?'on':''}" onclick="setTheme('auto')">تلقائي</button>
+        <button class="${p.theme==='light'?'on':''}" onclick="setTheme('light')">فاتح</button>
+        <button class="${p.theme==='dark'?'on':''}" onclick="setTheme('dark')">داكن</button>
+      </div></div>
+    <div class="setrow"><div><div class="t">لون التطبيق</div></div>
+      <div class="swatches">${COLORS.map(c=>`<button class="sw ${p.accent===c?'on':''}" style="background:${c};color:${c}" onclick="setAccent('${c}')"></button>`).join('')}</div></div>
+  </div>
+  <div class="sectionlabel">التنبيهات</div>
+  <div class="card" style="padding:0">
+    <div class="setrow"><div><div class="t">تنبيهات الجرعات</div><div class="d">إشعار لما ييجي معاد جرعة. لازم تسمح بالإشعارات، ويفضّل التطبيق مثبّت على الشاشة الرئيسية.</div></div>
+      <button class="switch ${p.notif?'on':''}" onclick="toggleNotif()"></button></div>
+    <div class="setrow"><div><div class="t">تنبيه قربان الدواء</div><div class="d">يفكرك تجدد العلبة لما العدد يقل</div></div>
+      <button class="switch ${p.refill?'on':''}" onclick="toggleRefill()"></button></div>
+  </div>
+  <div class="sectionlabel">عام</div>
+  <div class="card" style="padding:0">
+    <div class="setrow"><div><div class="t">شارك دوايا</div><div class="d">ابعته لحد بياخد دواء بانتظام</div></div>
+      <button class="linkrow" onclick="shareApp()">مشاركة</button></div>
+    <div class="setrow"><div><div class="t">تنبيه لحد من العيلة (قريبًا)</div><div class="d">مزامنة مع موبايل قريبك عشان يطمن إنك خدت دواك</div></div>
+      <span class="tag">قريبًا</span></div>
+    <div class="setrow"><div><div class="t">تنبيه طبي</div><div class="d">دوايا للتذكير فقط وليس بديلًا عن استشارة الطبيب أو الصيدلي. مواعيد وجرعات الدواء مسؤوليتك أنت وطبيبك.</div></div></div>
+    <div class="setrow"><div><div class="t">مسح كل البيانات</div><div class="d">يمسح الأدوية والسجل من على موبايلك</div></div>
+      <button class="linkrow" style="color:var(--danger)" onclick="confirmReset()">مسح</button></div>
+  </div>
+  <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">دوايا • الإصدار ١٫٠</div>`;
+}
+window.askName=()=>{
+  showModal(`<h4>اسمك في التحية</h4>
+    <div class="field"><input type="text" id="mname" value="${esc(S.profile.name)}" maxlength="30" placeholder="اسمك"></div>
+    <div class="btnrow"><button class="btn ghost" onclick="closeModal()">إلغاء</button>
+    <button class="btn primary" onclick="saveName()">حفظ</button></div>`);
+  setTimeout(()=>$('#mname').focus(),150);
+};
+window.saveName=()=>{S.profile.name=$('#mname').value.trim();save();closeModal();render();};
+window.setTheme=t=>{S.profile.theme=t;save();applyTheme();render();};
+window.setAccent=c=>{S.profile.accent=c;save();applyAccent();render();};
+window.toggleNotif=async()=>{
+  if(!S.profile.notif){
+    if(!('Notification' in window)){toast('المتصفح ده مش بيدعم الإشعارات');return;}
+    const r=await Notification.requestPermission();
+    if(r==='granted'){S.profile.notif=true;save();render();toast('التنبيهات شغالة ✅');}
+    else toast('الإشعارات مرفوضة من المتصفح');
+  }else{S.profile.notif=false;save();render();}
+};
+window.toggleRefill=()=>{S.profile.refill=!S.profile.refill;save();render();};
+window.shareApp=async()=>{
+  const data={title:'دوايا - تذكير الدواء',text:'دوايا: تطبيق عربي مجاني بيفكّرك بمواعيد دواك ويتابع التزامك 💊',url:location.href};
+  try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(data.text+' '+data.url);toast('الرابط اتنسخ ✅');}}catch(e){}
+};
+window.confirmReset=()=>{
+  showModal(`<h4>مسح كل البيانات؟</h4><p>هيتمسح كل الأدوية والسجل من على موبايلك نهائيًا. مفيش تراجع.</p>
+  <div class="btnrow"><button class="btn ghost" onclick="closeModal()">تراجع</button>
+  <button class="btn danger" onclick="doReset()">امسح الكل</button></div>`);
+};
+window.doReset=()=>{const p=S.profile;S=fresh();S.profile.seen=p.seen;S.profile.name=p.name;save();closeModal();render();toast('اتمسح كل حاجة');};
+
+/* ============ sheet: add/edit med ============ */
+let form=null;
+window.openSheet=(id)=>{
+  editId=id||null;
+  const m=id?S.meds.find(x=>x.id===id):null;
+  form=m?JSON.parse(JSON.stringify(m)):{name:'',dose:'',unit:'قرص',times:[],days:[],icon:'💊',color:COLORS[Math.floor(Math.random()*COLORS.length)],pillsLeft:null,refillAt:5};
+  $('#sheetin').innerHTML=`<div class="grab"></div><h3>${m?'تعديل دواء':'دواء جديد'}</h3>
+    <div class="field"><label>اسم الدواء</label><input type="text" id="f_name" value="${esc(form.name)}" placeholder="مثال: جلوكوفاج، كونكور..." maxlength="50"></div>
+    <div class="fieldrow">
+      <div class="field"><label>الجرعة</label><input type="text" id="f_dose" value="${esc(form.dose)}" placeholder="1 أو 500" maxlength="10"></div>
+      <div class="field"><label>الوحدة</label><select id="f_unit">${UNITS.map(u=>`<option ${form.unit===u?'selected':''}>${u}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><label>الأيقونة واللون</label>
+      <div class="chips" id="f_icons">${ICONS.map(ic=>`<button class="chip ${form.icon===ic?'on':''}" onclick="pickIcon('${ic}')">${ic}</button>`).join('')}</div>
+      <div class="swatches" style="margin-top:10px">${COLORS.map(c=>`<button class="sw ${form.color===c?'on':''}" id="sw_${c.slice(1)}" style="background:${c};color:${c}" onclick="pickColor('${c}')"></button>`).join('')}</div>
+    </div>
+    <div class="field"><label>مواعيد الجرعات</label>
+      <div style="display:flex;gap:8px;align-items:center"><input type="time" id="f_time"><button class="chip" onclick="addTime()">+ أضف المعاد</button></div>
+      <div class="timechips" id="f_times"></div>
+    </div>
+    <div class="field"><label>التكرار</label>
+      <div class="chips"><button class="chip ${!form.days.length?'on':''}" id="f_daily" onclick="pickDaily()">كل يوم</button>
+      ${DAYS_S.map((d,i)=>`<button class="chip ${form.days.includes(i)?'on':''}" id="f_d${i}" onclick="pickDay(${i})">${d}</button>`).join('')}</div>
+    </div>
+    <div class="fieldrow">
+      <div class="field"><label>عدد الوحدات المتبقية (اختياري)</label><input type="number" id="f_pills" min="0" max="999" placeholder="30" value="${form.pillsLeft??''}"></div>
+      <div class="field"><label>فكّرني عند</label><input type="number" id="f_refill" min="0" max="99" value="${form.refillAt??5}"></div>
+    </div>
+    <div class="btnrow">
+      ${m?`<button class="btn danger" onclick="delMed()">حذف</button>`:''}
+      <button class="btn ghost" onclick="closeSheet()">إلغاء</button>
+      <button class="btn primary" onclick="saveMed()">${m?'حفظ':'إضافة'}</button>
+    </div>`;
+  renderTimes();
+  $('#overlay').classList.add('show');$('#sheet').classList.add('show');
+  setTimeout(()=>$('#f_name').focus(),350);
+};
+function renderTimes(){
+  $('#f_times').innerHTML=form.times.sort().map((t,i)=>`<span class="timechip2">${arTime(t)}<button onclick="rmTime(${i})">✕</button></span>`).join('')
+    ||'<span style="font-size:12.5px;color:var(--muted)">ضيف معاد واحد على الأقل</span>';
+}
+window.pickIcon=ic=>{form.icon=ic;document.querySelectorAll('#f_icons .chip').forEach(c=>c.classList.toggle('on',c.textContent===ic));vibrate(8);};
+window.pickColor=c=>{form.color=c;document.querySelectorAll('.swatches .sw').forEach(s=>s.classList.remove('on'));const el=$('#sw_'+c.slice(1));if(el)el.classList.add('on');vibrate(8);};
+window.addTime=()=>{const v=$('#f_time').value;if(!v){toast('اختار المعاد الأول');return;}if(form.times.includes(v)){toast('المعاد موجود');return;}form.times.push(v);renderTimes();vibrate(10);};
+window.rmTime=i=>{form.times.splice(i,1);renderTimes();};
+window.pickDaily=()=>{form.days=[];$('#f_daily').classList.add('on');DAYS_S.forEach((_,i)=>$('#f_d'+i).classList.remove('on'));};
+window.pickDay=i=>{const ix=form.days.indexOf(i);if(ix>=0)form.days.splice(ix,1);else form.days.push(i);$('#f_d'+i).classList.toggle('on');$('#f_daily').classList.toggle('on',!form.days.length);};
+window.saveMed=()=>{
+  form.name=$('#f_name').value.trim();
+  form.dose=$('#f_dose').value.trim();
+  form.unit=$('#f_unit').value;
+  const pl=$('#f_pills').value;form.pillsLeft=pl===''?null:Math.max(0,parseInt(pl)||0);
+  const ra=$('#f_refill').value;form.refillAt=ra===''?5:Math.max(0,parseInt(ra)||0);
+  if(!form.name){toast('اكتب اسم الدواء');return;}
+  if(!form.times.length){toast('ضيف معاد واحد على الأقل');return;}
+  if(!form.dose)form.dose='1';
+  if(editId){const i=S.meds.findIndex(x=>x.id===editId);S.meds[i]={...form,id:editId};}
+  else{S.meds.push({...form,id:'m'+Date.now().toString(36)});}
+  save();closeSheet();render();vibrate(15);toast(editId?'اتحفظ ✅':'دواء جديد اتضاف ✅');
+};
+window.delMed=()=>{
+  showModal(`<h4>حذف الدواء؟</h4><p>هيتمسح من قايمتك، بس سجلّك القديم هيفضل.</p>
+  <div class="btnrow"><button class="btn ghost" onclick="closeModal()">تراجع</button>
+  <button class="btn danger" onclick="doDel()">احذف</button></div>`);
+};
+window.doDel=()=>{S.meds=S.meds.filter(x=>x.id!==editId);save();closeModal();closeSheet();render();toast('اتحذف');};
+window.closeSheet=()=>{$('#overlay').classList.remove('show');$('#sheet').classList.remove('show');editId=null;};
+$('#overlay').addEventListener('click',closeSheet);
+$('#fab').addEventListener('click',()=>openSheet(null));
+
+/* ============ modal ============ */
+function showModal(html){$('#modalcard').innerHTML=html;$('#modal').classList.add('show');}
+window.closeModal=()=>$('#modal').classList.remove('show');
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+
+/* ============ theme ============ */
+function applyTheme(){
+  const t=S.profile.theme==='auto'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):S.profile.theme;
+  document.documentElement.dataset.theme=t;
+  document.querySelector('meta[name=theme-color]').content=t==='light'?'#F3F4F7':'#0B0D12';
+}
+function applyAccent(){
+  const a=S.profile.accent;document.documentElement.style.setProperty('--accent',a);
+  document.documentElement.style.setProperty('--accent2',shade(a,-18));
+}
+function shade(hex,p){const n=parseInt(hex.slice(1),16),f=v=>Math.max(0,Math.min(255,v));
+  const r=f((n>>16)+p*2.55|0),g=f((n>>8&255)+p*2.55|0),b=f((n&255)+p*2.55|0);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
+matchMedia('(prefers-color-scheme: light)').addEventListener('change',()=>{if(S.profile.theme==='auto')applyTheme();});
+
+/* ============ notifications ============ */
+async function notifyDue(){
+  if(!S.profile.notif||!('Notification' in window)||Notification.permission!=='granted')return;
+  const now=new Date(),dk=todayKey(),nowHm=pad(now.getHours())+':'+pad(now.getMinutes());
+  if(!S.notified[dk])S.notified[dk]={};
+  for(const d of dosesFor(now)){
+    if(d.status||d.time>nowHm||pastMin(d.time)>20)continue;
+    if(S.notified[dk][d.key])continue;
+    S.notified[dk][d.key]=1;save();
+    const body=`حان وقت ${d.med.name} - ${d.med.dose} ${d.med.unit}`;
+    try{
+      const reg=await navigator.serviceWorker.getRegistration();
+      if(reg)reg.showNotification('دوايا 💊 موعد دوائك',{body,dir:'rtl',lang:'ar',tag:d.key,icon:'icons/icon-192.png',badge:'icons/icon-192.png',vibrate:[120,60,120]});
+      else new Notification('دوايا 💊 موعد دوائك',{body,dir:'rtl',lang:'ar',tag:d.key});
+    }catch(e){try{new Notification('دوايا 💊 موعد دوائك',{body,tag:d.key});}catch(_){}}
+  }
+  const ks=Object.keys(S.notified);if(ks.length>7){ks.sort().slice(0,ks.length-7).forEach(k=>delete S.notified[k]);save();}
+}
+setInterval(notifyDue,20000);
+
+/* ============ tabs ============ */
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;vibrate(8);render();window.scrollTo({top:0});}));
+
+/* ============ welcome ============ */
+if(!S.profile.seen){$('#welcome').classList.remove('hide');}
+$('#wstart').addEventListener('click',()=>{
+  S.profile.name=$('#wname').value.trim();S.profile.seen=true;save();
+  $('#welcome').classList.add('hide');render();
+  setTimeout(()=>openSheet(null),400);
+});
+
+/* ============ boot ============ */
+applyTheme();applyAccent();render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
