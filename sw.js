@@ -1,4 +1,4 @@
-const CACHE = 'dawaya-v4';
+const CACHE = 'dawaya-v5';
 const SHELL = ['./', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-180.png'];
 
@@ -53,3 +53,4 @@ self.addEventListener('notificationclick', e => {
     })
   );
 });
+
