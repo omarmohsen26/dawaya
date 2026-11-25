@@ -596,7 +596,7 @@ function renderHistory(){
     let cls='';
     if(!x.n)cls='';
     else if(x.t===x.n)cls='full';
-    else if(x.all>0||x.i===0)cls='part';
+    else if(x.all>0)cls='part';
     else cls='';
     const today=x.i===0;
     const pending=today&&!(x.n&&x.t===x.n);
