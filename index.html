@@ -223,10 +223,10 @@ input[type=time]{background:var(--card2);border:1px solid var(--line);border-rad
 .modalcard p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px}
 
 /* toast */
-.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom) + 150px);left:50%;transform:translateX(-50%) translateY(80px);
+.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom) + 150px);left:50%;transform:translateX(-50%) translateY(80px);opacity:0;pointer-events:none;
   z-index:60;background:var(--card2);border:1px solid var(--line);color:var(--text);padding:11px 20px;border-radius:999px;
-  font-size:14px;font-weight:700;box-shadow:var(--shadow);transition:transform .4s var(--spring);white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
+  font-size:14px;font-weight:700;box-shadow:var(--shadow);transition:transform .4s var(--spring),opacity .3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* empty */
 .empty{text-align:center;padding:44px 20px;color:var(--muted)}
