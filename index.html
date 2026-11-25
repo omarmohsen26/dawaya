@@ -18,10 +18,10 @@
 <style>
 :root{
   --accent:#0E9F6E; --accent2:#0B7A55;
-  --bg:#0F1512; --card:#1A221E; --card2:#212A25; --line:#2A332E;
-  --text:#F0F2F1; --muted:#93A19A; --danger:#EF4444; --warn:#F59E0B; --ok:#4ADE80; --okink:#052E16;
+  --bg:#000000; --card:#16181C; --card2:#1F2227; --line:#26292E;
+  --text:#FFFFFF; --muted:#8E8E93; --danger:#EF4444; --warn:#F59E0B; --ok:#4ADE80; --okink:#052E16;
   --nextbg:rgba(52,211,153,.14); --nextink:#34D399;
-  --radius:16px; --shadow:0 2px 12px rgba(0,0,0,.28);
+  --radius:16px; --shadow:none;
   --spring:cubic-bezier(.22,1,.36,1);
 }
 html[data-theme="light"]{
@@ -48,28 +48,29 @@ header{padding:calc(env(safe-area-inset-top) + 18px) 20px 8px;position:sticky;to
   background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .greet{font-size:15px;color:var(--muted);font-weight:500}
 .htitle{font-size:24px;font-weight:800;margin-top:2px}
-main{flex:1;padding:10px 16px 120px;animation:fadein .35s var(--spring)}
-@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+main{flex:1;padding:10px 16px 120px}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+main.enter .card,main.enter .banner,main.enter .statrow,main.enter .dayhead,main.enter .adcard{animation:enter .28s ease-out backwards}
+main.enter .card:nth-of-type(2),main.enter .banner:nth-of-type(2){animation-delay:.04s}
+main.enter .card:nth-of-type(3),main.enter .banner:nth-of-type(3){animation-delay:.08s}
+main.enter .card:nth-of-type(4),main.enter .banner:nth-of-type(4){animation-delay:.12s}
+main.enter .card:nth-of-type(n+5),main.enter .banner:nth-of-type(n+5){animation-delay:.16s}
 
 /* cards */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
   padding:16px;margin-bottom:12px;transition:transform .25s var(--spring),background .35s,border-color .35s}
-@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
-main .card{animation:pop .38s var(--spring) backwards}
-main .card:nth-of-type(2){animation-delay:.045s}
-main .card:nth-of-type(3){animation-delay:.09s}
-main .card:nth-of-type(4){animation-delay:.135s}
-main .card:nth-of-type(n+5){animation-delay:.18s}
 .pressable:active{transform:scale(.975)}
 
 /* today progress */
 .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
-.ring{flex:none;width:56px;height:56px;position:relative}
+.ring{flex:none;width:72px;height:72px;position:relative}
+.ring::before{content:'';position:absolute;inset:-18px;border-radius:50%;z-index:-1;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 20%,transparent),transparent 68%)}
 .ring svg{transform:rotate(-90deg)}
 .ring .track{stroke:var(--line)}
-.ring .bar{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .7s var(--spring)}
-.ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
-.heroinfo h2{font-size:20px;font-weight:700;margin-bottom:3px}
+.ring .bar{stroke:var(--accent);stroke-linecap:round;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--accent) 45%,transparent));transition:stroke-dashoffset .7s var(--spring)}
+.ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.heroinfo h2{font-size:24px;font-weight:800;margin-bottom:3px}
 .heroinfo p{font-size:13.5px;color:var(--muted);line-height:1.55}
 .nextdose{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:8px 12px;border-radius:999px;width:100%;
   background:var(--nextbg);color:var(--nextink);font-size:13px;font-weight:700}
@@ -115,10 +116,10 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 /* banner */
 .banner{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;border-radius:16px;margin-bottom:12px;
   font-size:13.5px;font-weight:600;line-height:1.6}
-.banner.neutral{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
+.banner.neutral{background:transparent;color:var(--muted);border:1px solid var(--line)}
 .banner svg{flex:none;width:18px;height:18px;margin-top:2px}
-.banner.warn{background:color-mix(in srgb,var(--warn) 12%,transparent);color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
-.banner.info{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--nextink);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
+.banner.warn{background:transparent;color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent)}
+.banner.info{background:color-mix(in srgb,var(--accent) 5%,transparent);color:var(--nextink);border:1px solid color-mix(in srgb,var(--accent) 22%,transparent)}
 
 /* med list */
 .medrow{display:flex;align-items:center;gap:13px}
@@ -131,15 +132,23 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .tag.low{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 40%,transparent);background:color-mix(in srgb,var(--warn) 10%,transparent)}
 
 /* history */
-.bars{display:flex;align-items:flex-end;gap:6px;height:110px;padding:8px 2px 0}
-.barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
-.bar{width:100%;max-width:22px;border-radius:6px;background:var(--accent);opacity:.9;min-height:4px;transition:height .5s var(--spring)}
-.bar.none{background:var(--card2);border:1px dashed var(--line)}
-.barday{font-size:12px;color:var(--muted);font-weight:600}
+.g30head{display:flex;align-items:baseline;justify-content:space-between;margin:2px 0 10px}
+.g30head .dayhead{margin:0}
+.g30cap{font-size:12.5px;color:var(--muted);font-weight:600}
+.g30{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.g30 .lbl{font-size:11px;color:var(--muted);font-weight:700;text-align:center;padding-bottom:2px}
+.g30 .c{aspect-ratio:1;border-radius:9px;background:transparent;border:1.5px solid var(--line)}
+.g30 .c.full{background:var(--ok);border-color:transparent}
+.g30 .c.part{background:color-mix(in srgb,var(--ok) 32%,transparent);border-color:transparent}
+.g30 .c.planned{border-style:dashed;border-color:color-mix(in srgb,var(--accent) 55%,transparent)}
+.g30 .c.today{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--accent)}
 .statrow{display:flex;gap:10px;margin-bottom:12px}
-.stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.stat{flex:1;position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
 .stat .n{font-size:32px;font-weight:800;color:var(--accent)}
 .stat .l{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600}
+.delta{position:absolute;top:10px;inset-inline-start:10px;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px}
+.delta.up{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.delta.flat{background:var(--card2);color:var(--muted)}
 
 /* settings */
 .setrow{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;gap:12px;min-height:56px}
@@ -209,6 +218,7 @@ input[type=time]{background:var(--card2);border:1px solid var(--line);border-rad
 .btn{flex:1;padding:15px;min-height:52px;border-radius:14px;font-size:16px;font-weight:800;text-align:center;transition:transform .15s var(--spring)}
 .btn:active{transform:scale(.97)}
 .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+html[data-theme="dark"] .btn.primary,html[data-theme="dark"] .wbtn{background:#FFFFFF;color:#000000}
 .btn.ghost{background:var(--card2);border:1px solid var(--line);color:var(--muted)}
 .btn.danger{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
 
@@ -452,10 +462,12 @@ function nextDose(){
 /* ============ render ============ */
 const TITLES={today:'اليوم',meds:'أدويتي',history:'السجل',settings:'الإعدادات'};
 function render(){
-  $('#htitle').textContent=TITLES[tab];
   const h=new Date().getHours();
   const g=h<12?'صباح الخير':h<17?'نهارك سعيد':'مساء الخير';
-  $('#greet').textContent=g+(S.profile.name?' يا '+S.profile.name:'')+' • '+arDate(new Date());
+  const who=g+(S.profile.name?' يا '+S.profile.name:'');
+  $('#htitle').textContent=tab==='today'?who:TITLES[tab];
+  $('#greet').textContent=tab==='today'?arDate(new Date()):(who+' • '+arDate(new Date()));
+  if(!window._entered){window._entered=true;view.classList.add('enter');setTimeout(()=>view.classList.remove('enter'),700);}
   $('#fab').classList.toggle('hidden',tab==='settings'||tab==='history');
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
   ({today:renderToday,meds:renderMeds,history:renderHistory,settings:renderSettings})[tab]();
@@ -472,11 +484,11 @@ function renderToday(){
   const nd=nextDose();
   const missed=ds.filter(d=>!d.status&&d.time<pad(new Date().getHours())+':'+pad(new Date().getMinutes())&&d.time<pad((new Date().getHours()+23)%24)+':'+pad(new Date().getMinutes())&&pastMin(d.time)>60);
   const low=S.meds.filter(m=>!m.paused&&typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5));
-  const circ=2*Math.PI*24;
+  const circ=2*Math.PI*30;
   const was=window._lastPct;window._lastPct=pct;
   let html=`<div class="card"><div class="hero">
-    <div class="ring"><svg width="56" height="56"><circle class="track" cx="28" cy="28" r="24" fill="none" stroke-width="5"/>
-    <circle class="bar" cx="28" cy="28" r="24" fill="none" stroke-width="5" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pct/100)}"/></svg>
+    <div class="ring"><svg width="72" height="72"><circle class="track" cx="36" cy="36" r="30" fill="none" stroke-width="5"/>
+    <circle class="bar" cx="36" cy="36" r="30" fill="none" stroke-width="5" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pct/100)}"/></svg>
     <div class="pct"><bdi>${toAr(pct)}٪</bdi></div></div>
     <div class="heroinfo"><h2>${ds.length?`خدت ${toAr(taken)} من ${toAr(ds.length)} جرعات`:'مفيش جرعات النهاردة'}</h2>
     <p>${pct===100&&ds.length?'يوم كامل، برافو عليك 🎉':ds.length?'كمل، كل جرعة بتوثّق التزامك.':'استريح، مفيش حاجة مجدولة.'}</p></div>
@@ -484,7 +496,8 @@ function renderToday(){
     ${calcStreak()>0?`<span class="nextdose" style="background:color-mix(in srgb,var(--warn) 13%,transparent);color:var(--warn)">🔥 ${toAr(calcStreak())} ${calcStreak()===1?'يوم':'أيام'} التزام ورا بعض</span>`:''}
     </div>${weekStrip()}</div>`;
   if(missed.length)html+=`<div class="banner neutral">${uiIcon('clock')}<div>عندك ${toAr(missed.length)} ${missed.length===1?'جرعة فاتت':'جرعات فاتت'} من غير تسجيل. سجّلها لو خدتها، أو تخطَّها.</div></div>`;
-  for(const m of low)html+=`<div class="banner warn">${uiIcon('bell')}<div><b>${esc(m.name)}</b> قرب يخلص (فاضل ${toAr(m.pillsLeft)} ${m.unit}). جدّد العلبة في أقرب صيدلية.</div></div>`;
+  else if(low.length){const m=low.reduce((a,b)=>a.pillsLeft<=b.pillsLeft?a:b);
+    html+=`<div class="banner warn">${uiIcon('bell')}<div><b>${esc(m.name)}</b> قرب يخلص (فاضل ${toAr(m.pillsLeft)} ${m.unit}). جدّد العلبة في أقرب صيدلية.</div></div>`;}
   html+=`<div class="dayhead">جدول النهاردة</div>`;
   if(!ds.length)html+=`<div class="empty" style="padding:26px"><p>مفيش جرعات مجدولة النهاردة.</p></div>`;
   for(const d of ds){
@@ -554,23 +567,40 @@ function renderMeds(){
 }
 
 function renderHistory(){
-  const days=[];let totTaken=0,totAll=0,streak=0,streakOn=true;
-  for(let i=13;i>=0;i--){
+  const days=[];let totTaken=0,totAll=0,prevTaken=0,prevAll=0,fullDays=0;
+  for(let i=29;i>=0;i--){
     const d=new Date();d.setDate(d.getDate()-i);
     const ds=dosesFor(d);const t=ds.filter(x=>x.status==='taken').length;const s=ds.filter(x=>x.status==='skipped').length;
-    days.push({d,t,all:t+s,n:ds.length});
-    if(i>0){totTaken+=t;totAll+=t+s;}
+    days.push({d,t,all:t+s,n:ds.length,i});
+    if(i>=1&&i<=14){totTaken+=t;totAll+=t+s;}
+    else if(i>=15&&i<=28){prevTaken+=t;prevAll+=t+s;}
+    if(ds.length&&t===ds.length)fullDays++;
   }
-  for(let i=0;i<14;i++){const x=days[13-i];
-    if(x.n&&x.t===x.n){if(streakOn)streak++;}else if(x.n){streakOn=false;}}
   const rate=totAll?Math.round(totTaken/totAll*100):0;
+  const prevRate=prevAll?Math.round(prevTaken/prevAll*100):null;
+  let delta='';
+  if(prevRate!==null){
+    const dd=rate-prevRate;
+    if(dd>0)delta=`<span class="delta up"><bdi>+${toAr(dd)}٪</bdi></span>`;
+    else if(dd===0)delta=`<span class="delta flat">ثابت</span>`;
+    else delta=`<span class="delta flat"><bdi>−${toAr(-dd)}٪</bdi></span>`;
+  }
   let html=`<div class="statrow">
-    <div class="stat"><div class="n"><bdi>${toAr(rate)}٪</bdi></div><div class="l">نسبة الالتزام</div></div>
+    <div class="stat">${delta}<div class="n"><bdi>${toAr(rate)}٪</bdi></div><div class="l">نسبة الالتزام</div></div>
     <div class="stat"><div class="n">${toAr(bestStreak())}</div><div class="l">أفضل سلسلة أيام 🔥</div></div></div>
-    <div class="card"><div class="dayhead" style="margin-top:2px">آخر ١٤ يوم</div><div class="bars">`;
+    <div class="card"><div class="g30head"><div class="dayhead">آخر ٣٠ يوم</div><div class="g30cap">${toAr(fullDays)} ${fullDays===1?'يوم كامل':'أيام كاملة'}</div></div><div class="g30">`;
+  const WEEK_LBL=['أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
+  for(const w of WEEK_LBL)html+=`<div class="lbl">${w}</div>`;
+  for(let k=0;k<days[0].d.getDay();k++)html+='<div></div>';
   for(const x of days){
-    const h=x.all?Math.max(8,Math.round(x.t/x.all*100)):(x.n?8:0);
-    html+=`<div class="barcol"><div class="bar ${x.n?'':'none'}" style="height:${x.n?h+'%':'3px'}" title="${x.t}/${x.n}"></div><div class="barday">${DAY_INIT[x.d.getDay()]}</div></div>`;
+    let cls='';
+    if(!x.n)cls='';
+    else if(x.t===x.n)cls='full';
+    else if(x.all>0||x.i===0)cls='part';
+    else cls='';
+    const today=x.i===0;
+    const pending=today&&!(x.n&&x.t===x.n);
+    html+=`<div class="c ${cls} ${pending?'planned':''} ${today?'today':''}" title="${x.t}/${x.n}"></div>`;
   }
   html+=`</div></div><div class="banner info">${uiIcon('bulb')}<div>الالتزام بالدواء في معايده هو أهم حاجة لمفعوله. لو نسيت جرعة، سجّلها من صفحة اليوم.</div></div>`;
   html+=`<div class="adcard"><span class="adtag">إعلان</span><div class="adt">مساحة إعلانية صغيرة</div>
