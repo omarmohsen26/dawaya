@@ -14,7 +14,7 @@
 <link rel="icon" type="image/png" sizes="192" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --accent:#0E9F6E; --accent2:#0B7A55;
@@ -27,7 +27,7 @@
 html[data-theme="light"]{
   --accent:#0E9F6E; --accent2:#0B7A55;
   --bg:#FAF8F4; --card:#FFFFFF; --card2:#F5F3EE; --line:#E9E5DC;
-  --text:#1A2B26; --muted:#5C6B64; --danger:#DC2626; --warn:#F59E0B; --ok:#16A34A; --okink:#FFFFFF;
+  --text:#1A1D21; --muted:#5C6B64; --danger:#DC2626; --warn:#F59E0B; --ok:#16A34A; --okink:#FFFFFF;
   --nextbg:#DFF3E8; --nextink:#0E7A52;
   --shadow:0 2px 12px rgba(26,43,38,.06);
 }
@@ -36,7 +36,7 @@ html[data-theme="light"] .tabbarin{box-shadow:0 -4px 24px rgba(26,43,38,.06)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{
-  font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;
+  font-family:'IBM Plex Sans Arabic','Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;
   min-height:100dvh;overscroll-behavior:none;transition:background .35s,color .35s;
 }
 button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
@@ -47,7 +47,7 @@ input,select{font-family:inherit}
 header{padding:calc(env(safe-area-inset-top) + 18px) 20px 8px;position:sticky;top:0;z-index:20;
   background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .greet{font-size:15px;color:var(--muted);font-weight:500}
-.htitle{font-size:28px;font-weight:800;margin-top:2px}
+.htitle{font-size:24px;font-weight:800;margin-top:2px}
 main{flex:1;padding:10px 16px 120px;animation:fadein .35s var(--spring)}
 @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
@@ -102,15 +102,15 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .wdot.part{background:color-mix(in srgb,var(--warn) 16%,transparent);border-color:var(--warn);color:var(--warn)}
 .wdot.miss{background:var(--card2);border-color:var(--line);color:var(--muted)}
 .wdot.today{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--accent)}
-.wlbl{font-size:10px;color:var(--muted);font-weight:700}
+.wlbl{font-size:12px;color:var(--muted);font-weight:700}
 
 /* ad placeholder (mockup - AdMob slot goes here later) */
 .adcard{margin:14px 0 2px;border:1.5px dashed var(--line);border-radius:var(--radius);
   padding:10px 14px;text-align:center;color:var(--muted);background:transparent}
-.adcard .adtag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;
+.adcard .adtag{display:inline-block;font-size:12px;font-weight:800;
   border:1px solid var(--line);border-radius:6px;padding:2px 8px;margin-bottom:8px;color:var(--muted)}
 .adcard .adt{font-size:13.5px;font-weight:700}
-.adcard .ads{font-size:11.5px;margin-top:4px;opacity:.75;line-height:1.6}
+.adcard .ads{font-size:12px;margin-top:4px;opacity:.75;line-height:1.6}
 
 /* banner */
 .banner{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;border-radius:16px;margin-bottom:12px;
@@ -127,7 +127,7 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .medrow .name{font-weight:700;font-size:16px}
 .medrow .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
 .medrow .chev{color:var(--muted);font-size:18px}
-.tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);margin-inline-start:5px}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:3px 8px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted);margin-inline-start:5px}
 .tag.low{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 40%,transparent);background:color-mix(in srgb,var(--warn) 10%,transparent)}
 
 /* history */
@@ -135,10 +135,10 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
 .bar{width:100%;max-width:22px;border-radius:6px;background:var(--accent);opacity:.9;min-height:4px;transition:height .5s var(--spring)}
 .bar.none{background:var(--card2);border:1px dashed var(--line)}
-.barday{font-size:10.5px;color:var(--muted);font-weight:600}
+.barday{font-size:12px;color:var(--muted);font-weight:600}
 .statrow{display:flex;gap:10px;margin-bottom:12px}
 .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
-.stat .n{font-size:24px;font-weight:800;color:var(--accent)}
+.stat .n{font-size:32px;font-weight:800;color:var(--accent)}
 .stat .l{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600}
 
 /* settings */
@@ -164,7 +164,7 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
   background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--line);padding:8px 10px calc(env(safe-area-inset-bottom) + 8px)}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 0;min-height:56px;border-radius:14px;
-  color:var(--muted);font-size:11px;font-weight:700;transition:color .2s}
+  color:var(--muted);font-size:12px;font-weight:700;transition:color .2s}
 .tab svg{width:23px;height:23px}
 .tab.on{color:var(--accent)}
 
@@ -464,7 +464,7 @@ function render(){
 function renderToday(){
   const ds=dosesFor(new Date());
   if(!S.meds.length){
-    view.innerHTML=`<div class="empty"><div class="ic" style="color:var(--accent)">${iconSvg('pill')}</div><h3>مفيش أدوية لسه</h3><p>اضغط على "دواء جديد" وأضف أول دواء،<br>ودوايا هيفكّرك بمواعيده كل يوم.</p></div>`;
+    view.innerHTML=`<div class="empty"><div class="ic" style="color:var(--accent)">${iconSvg('pill')}</div><h3>مفيش أدوية لسه</h3><p>اضغط على "دواء جديد" وأضف أول دواء،<br>ودوايا هيفكّرك بمواعيده كل يوم.</p><button class="btn primary" style="max-width:230px;margin:18px auto 0;display:block" onclick="openSheet(null)">+ أضف أول دواء</button></div>`;
     return;
   }
   const taken=ds.filter(d=>d.status==='taken').length;
@@ -489,7 +489,7 @@ function renderToday(){
   if(!ds.length)html+=`<div class="empty" style="padding:26px"><p>مفيش جرعات مجدولة النهاردة.</p></div>`;
   for(const d of ds){
     html+=`<div class="card dose pressable ${d.status==='taken'?'taken':''}">
-      <span class="timechip">${arTime(d.time)}</span>
+      <span class="timechip">${arTime(d.time)}</span>${!d.status&&pastMin(d.time)>60?'<span class="tag">اتفوّتت</span>':''}
       <div class="dot" style="background:color-mix(in srgb,${d.med.color} 12%,transparent);color:${d.med.color}">${iconSvg(d.med.icon)}</div>
       <div class="info"><div class="name">${esc(d.med.name)}</div><div class="sub">${esc(d.med.dose)} ${esc(d.med.unit)}${typeof d.med.pillsLeft==='number'?' • فاضل '+toAr(d.med.pillsLeft):''}</div></div>
       <div class="acts">
@@ -531,7 +531,7 @@ function bestStreak(){
 function timeGroup(t){const h=+t.split(':')[0];return h<12?0:h<17?1:2;}
 const GROUPS=['الصبح','الظهر','المساء'];
 function renderMeds(){
-  if(!S.meds.length){view.innerHTML=`<div class="empty"><div class="ic" style="color:var(--muted)">${uiIcon('box')}</div><h3>قايمة أدويتك فاضية</h3><p>أضف أدويتك بمواعيدها، وهتلاقيها هنا.</p></div>`;return;}
+  if(!S.meds.length){view.innerHTML=`<div class="empty"><div class="ic" style="color:var(--muted)">${uiIcon('box')}</div><h3>قايمة أدويتك فاضية</h3><p>أضف أدويتك بمواعيدها، وهتلاقيها هنا.</p><button class="btn primary" style="max-width:230px;margin:18px auto 0;display:block" onclick="openSheet(null)">+ أضف أول دواء</button></div>`;return;}
   const groups=[[],[],[]];
   for(const m of S.meds){const ts=m.times&&m.times.length?[...m.times].sort():['12:00'];groups[timeGroup(ts[0])].push(m);}
   let html='';
