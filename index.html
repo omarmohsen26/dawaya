@@ -489,9 +489,9 @@ function renderToday(){
   if(!ds.length)html+=`<div class="empty" style="padding:26px"><p>مفيش جرعات مجدولة النهاردة.</p></div>`;
   for(const d of ds){
     html+=`<div class="card dose pressable ${d.status==='taken'?'taken':''}">
-      <span class="timechip">${arTime(d.time)}</span>${!d.status&&pastMin(d.time)>60?'<span class="tag">اتفوّتت</span>':''}
+      <span class="timechip">${arTime(d.time)}</span>
       <div class="dot" style="background:color-mix(in srgb,${d.med.color} 12%,transparent);color:${d.med.color}">${iconSvg(d.med.icon)}</div>
-      <div class="info"><div class="name">${esc(d.med.name)}</div><div class="sub">${esc(d.med.dose)} ${esc(d.med.unit)}${typeof d.med.pillsLeft==='number'?' • فاضل '+toAr(d.med.pillsLeft):''}</div></div>
+      <div class="info"><div class="name">${esc(d.med.name)}</div><div class="sub">${esc(d.med.dose)} ${esc(d.med.unit)}${typeof d.med.pillsLeft==='number'?' • فاضل '+toAr(d.med.pillsLeft):''}${!d.status&&pastMin(d.time)>60?' <span class="tag">اتفوّتت</span>':''}</div></div>
       <div class="acts">
         <button class="pillbtn ok ${d.status==='taken'?'on':''}" onclick="act('${d.key}','${d.med.id}','${d.time}','taken')" aria-label="خدتها">✓</button>
         <button class="pillbtn skip ${d.status==='skipped'?'on':''}" onclick="act('${d.key}','${d.med.id}','${d.time}','skipped')" aria-label="تخطيتها">✕</button>
