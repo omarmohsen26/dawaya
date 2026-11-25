@@ -17,22 +17,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --accent:#10B981; --accent2:#059669;
-  --bg:#0B0D12; --card:#161A23; --card2:#1D222E; --line:rgba(255,255,255,.07);
-  --text:#F3F5F9; --muted:#8B93A5; --danger:#F87171; --warn:#FBBF24; --ok:#34D399;
-  --radius:20px;
+  --accent:#0E9F6E; --accent2:#0B7A55;
+  --bg:#0F1512; --card:#1A221E; --card2:#212A25; --line:#2A332E;
+  --text:#F0F2F1; --muted:#93A19A; --danger:#EF4444; --warn:#F59E0B; --ok:#4ADE80; --okink:#052E16;
+  --nextbg:rgba(52,211,153,.14); --nextink:#34D399;
+  --radius:16px; --shadow:0 2px 12px rgba(0,0,0,.28);
   --spring:cubic-bezier(.22,1,.36,1);
 }
 html[data-theme="light"]{
-  --bg:#F6F4EF; --card:#FFFFFF; --card2:#F5F3EE; --line:rgba(15,20,35,.07);
-  --text:#1A1E28; --muted:#71767F;
+  --accent:#0E9F6E; --accent2:#0B7A55;
+  --bg:#FAF8F4; --card:#FFFFFF; --card2:#F5F3EE; --line:#E9E5DC;
+  --text:#1A2B26; --muted:#5C6B64; --danger:#DC2626; --warn:#F59E0B; --ok:#16A34A; --okink:#FFFFFF;
+  --nextbg:#DFF3E8; --nextink:#0E7A52;
+  --shadow:0 2px 12px rgba(26,43,38,.06);
 }
-html[data-theme="light"] .card{box-shadow:0 1px 4px rgba(20,25,40,.05)}
-html[data-theme="light"] .tabbarin{box-shadow:0 -4px 24px rgba(20,25,40,.06)}
+.card{box-shadow:var(--shadow)}
+html[data-theme="light"] .tabbarin{box-shadow:0 -4px 24px rgba(26,43,38,.06)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{
-  font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;
   min-height:100dvh;overscroll-behavior:none;transition:background .35s,color .35s;
 }
 button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
@@ -43,7 +47,7 @@ input,select{font-family:inherit}
 header{padding:calc(env(safe-area-inset-top) + 18px) 20px 8px;position:sticky;top:0;z-index:20;
   background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .greet{font-size:15px;color:var(--muted);font-weight:500}
-.htitle{font-size:30px;font-weight:800;letter-spacing:-.3px;margin-top:2px}
+.htitle{font-size:28px;font-weight:800;margin-top:2px}
 main{flex:1;padding:10px 16px 120px;animation:fadein .35s var(--spring)}
 @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
@@ -59,16 +63,16 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .pressable:active{transform:scale(.975)}
 
 /* today progress */
-.hero{display:flex;align-items:center;gap:18px}
-.ring{flex:none;width:86px;height:86px;position:relative}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+.ring{flex:none;width:56px;height:56px;position:relative}
 .ring svg{transform:rotate(-90deg)}
 .ring .track{stroke:var(--line)}
 .ring .bar{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .7s var(--spring)}
-.ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px}
-.heroinfo h2{font-size:19px;font-weight:800;margin-bottom:3px}
+.ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.heroinfo h2{font-size:20px;font-weight:700;margin-bottom:3px}
 .heroinfo p{font-size:13.5px;color:var(--muted);line-height:1.55}
-.nextdose{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:6px 12px;border-radius:999px;
-  background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-size:13px;font-weight:700}
+.nextdose{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:8px 12px;border-radius:999px;width:100%;
+  background:var(--nextbg);color:var(--nextink);font-size:13px;font-weight:700}
 
 /* dose rows */
 .dayhead{font-size:14px;font-weight:700;color:var(--muted);margin:18px 4px 8px}
@@ -78,11 +82,12 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .dose .name{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dose .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
 .dose .acts{display:flex;gap:8px}
-.pillbtn{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+.pillbtn{flex:none;width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;
   font-size:19px;background:var(--card2);border:1px solid var(--line);transition:all .2s var(--spring)}
 .pillbtn:active{transform:scale(.9)}
-.pillbtn.ok.on{background:color-mix(in srgb,var(--ok) 20%,transparent);border-color:var(--ok);color:var(--ok)}
-.pillbtn.skip.on{background:color-mix(in srgb,var(--danger) 16%,transparent);border-color:var(--danger);color:var(--danger)}
+.pillbtn.ok.on{background:var(--ok);border-color:var(--ok);color:var(--okink);animation:popin .2s var(--spring)}
+@keyframes popin{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.pillbtn.skip.on{background:var(--card2);border-color:var(--muted);color:var(--muted)}
 .dose.taken{opacity:.62}
 .dose.taken .name{text-decoration:line-through;text-decoration-color:var(--muted);text-decoration-thickness:1.5px}
 .timechip{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);background:var(--card2);
@@ -95,13 +100,13 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
   font-size:13px;font-weight:800;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
 .wdot.full{background:color-mix(in srgb,var(--ok) 20%,transparent);border-color:var(--ok);color:var(--ok)}
 .wdot.part{background:color-mix(in srgb,var(--warn) 16%,transparent);border-color:var(--warn);color:var(--warn)}
-.wdot.miss{background:color-mix(in srgb,var(--danger) 10%,transparent);border-color:color-mix(in srgb,var(--danger) 35%,transparent);color:var(--danger)}
+.wdot.miss{background:var(--card2);border-color:var(--line);color:var(--muted)}
 .wdot.today{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--accent)}
 .wlbl{font-size:10px;color:var(--muted);font-weight:700}
 
 /* ad placeholder (mockup - AdMob slot goes here later) */
 .adcard{margin:14px 0 2px;border:1.5px dashed var(--line);border-radius:var(--radius);
-  padding:16px 14px;text-align:center;color:var(--muted);background:transparent}
+  padding:10px 14px;text-align:center;color:var(--muted);background:transparent}
 .adcard .adtag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;
   border:1px solid var(--line);border-radius:6px;padding:2px 8px;margin-bottom:8px;color:var(--muted)}
 .adcard .adt{font-size:13.5px;font-weight:700}
@@ -110,8 +115,10 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 /* banner */
 .banner{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;border-radius:16px;margin-bottom:12px;
   font-size:13.5px;font-weight:600;line-height:1.6}
+.banner.neutral{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
+.banner svg{flex:none;width:18px;height:18px;margin-top:2px}
 .banner.warn{background:color-mix(in srgb,var(--warn) 12%,transparent);color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
-.banner.info{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
+.banner.info{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--nextink);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
 
 /* med list */
 .medrow{display:flex;align-items:center;gap:13px}
@@ -131,32 +138,32 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .barday{font-size:10.5px;color:var(--muted);font-weight:600}
 .statrow{display:flex;gap:10px;margin-bottom:12px}
 .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
-.stat .n{font-size:22px;font-weight:800;color:var(--accent)}
+.stat .n{font-size:24px;font-weight:800;color:var(--accent)}
 .stat .l{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600}
 
 /* settings */
-.setrow{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;gap:12px}
+.setrow{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;gap:12px;min-height:56px}
 .setrow + .setrow{border-top:1px solid var(--line)}
 .setrow .t{font-weight:700;font-size:15px}
 .setrow .d{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
 .seg{display:flex;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
-.seg button{padding:7px 12px;border-radius:9px;font-size:13px;font-weight:700;color:var(--muted);transition:all .2s}
+.seg button{min-height:38px;padding:6px 14px;border-radius:9px;font-size:13px;font-weight:700;color:var(--muted);transition:all .2s}
 .seg button.on{background:var(--accent);color:#fff}
-.swatches{display:flex;gap:9px}
-.sw{width:27px;height:27px;border-radius:50%;border:2px solid transparent;transition:transform .2s var(--spring)}
+.swatches{display:flex;gap:10px}
+.sw{width:40px;height:40px;border-radius:50%;border:2px solid transparent;transition:transform .2s var(--spring)}
 .sw.on{border-color:#fff;transform:scale(1.18);box-shadow:0 0 0 2px var(--bg),0 0 0 4px currentColor}
-.switch{flex:none;width:50px;height:30px;border-radius:999px;background:var(--card2);border:1px solid var(--line);position:relative;transition:background .25s}
+.switch{flex:none;width:70px;height:50px;border:10px solid transparent;background-clip:padding-box;border-radius:999px;background-color:var(--card2);box-shadow:inset 0 0 0 1px var(--line);position:relative;transition:background-color .25s}
 .switch::after{content:'';position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:all .25s var(--spring);box-shadow:0 1px 3px rgba(0,0,0,.35)}
-.switch.on{background:var(--accent)}
+.switch.on{background-color:var(--accent);box-shadow:none}
 .switch.on::after{transform:translateX(-20px)}
-.linkrow{color:var(--accent);font-weight:700;font-size:14.5px}
+.linkrow{color:var(--accent);font-weight:700;font-size:14.5px;min-height:48px;display:inline-flex;align-items:center;padding:0 6px}
 
 /* tab bar */
 .tabbar{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:center;pointer-events:none}
 .tabbarin{pointer-events:auto;display:flex;gap:2px;width:min(520px,100%);
   background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--line);padding:8px 10px calc(env(safe-area-inset-bottom) + 8px)}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-radius:14px;
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 0;min-height:56px;border-radius:14px;
   color:var(--muted);font-size:11px;font-weight:700;transition:color .2s}
 .tab svg{width:23px;height:23px}
 .tab.on{color:var(--accent)}
@@ -177,7 +184,7 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
   transform:translateY(105%);transition:transform .45s var(--spring)}
 .sheet.show{transform:none}
 .sheetin{width:min(520px,100%);max-height:88dvh;overflow-y:auto;background:var(--card);
-  border-radius:26px 26px 0 0;border:1px solid var(--line);padding:14px 20px calc(env(safe-area-inset-bottom) + 22px)}
+  border-radius:24px 24px 0 0;border:1px solid var(--line);padding:14px 20px calc(env(safe-area-inset-bottom) + 22px)}
 .grab{width:40px;height:5px;border-radius:99px;background:var(--line);margin:2px auto 14px}
 .sheetin h3{font-size:20px;font-weight:800;margin-bottom:16px}
 .field{margin-bottom:15px}
@@ -189,7 +196,7 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .fieldrow{display:flex;gap:10px}
 .fieldrow .field{flex:1}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:9px 14px;border-radius:12px;background:var(--card2);border:1px solid var(--line);
+.chip{padding:9px 16px;min-height:44px;border-radius:999px;background:var(--card2);border:1px solid var(--line);
   font-size:14px;font-weight:700;color:var(--muted);transition:all .2s var(--spring)}
 .chip.on{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:var(--accent);color:var(--accent)}
 .timechips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
@@ -199,7 +206,7 @@ main .card:nth-of-type(n+5){animation-delay:.18s}
 .timechip2 button{color:var(--accent);font-size:15px;line-height:1;opacity:.7}
 input[type=time]{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;color:var(--text);font-size:15px;font-family:inherit}
 .btnrow{display:flex;gap:10px;margin-top:20px}
-.btn{flex:1;padding:15px;border-radius:16px;font-size:16px;font-weight:800;text-align:center;transition:transform .15s var(--spring)}
+.btn{flex:1;padding:15px;min-height:52px;border-radius:14px;font-size:16px;font-weight:800;text-align:center;transition:transform .15s var(--spring)}
 .btn:active{transform:scale(.97)}
 .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
 .btn.ghost{background:var(--card2);border:1px solid var(--line);color:var(--muted)}
@@ -216,9 +223,9 @@ input[type=time]{background:var(--card2);border:1px solid var(--line);border-rad
 .modalcard p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px}
 
 /* toast */
-.toast{position:fixed;top:calc(env(safe-area-inset-top) + 14px);left:50%;transform:translateX(-50%) translateY(-80px);
+.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom) + 150px);left:50%;transform:translateX(-50%) translateY(80px);
   z-index:60;background:var(--card2);border:1px solid var(--line);color:var(--text);padding:11px 20px;border-radius:999px;
-  font-size:14px;font-weight:700;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:transform .4s var(--spring);white-space:nowrap}
+  font-size:14px;font-weight:700;box-shadow:var(--shadow);transition:transform .4s var(--spring);white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
 /* empty */
@@ -231,17 +238,40 @@ input[type=time]{background:var(--card2);border:1px solid var(--line);border-rad
 .welcome{position:fixed;inset:0;z-index:70;background:var(--bg);display:flex;flex-direction:column;
   align-items:center;justify-content:center;padding:30px;text-align:center}
 .welcome.hide{display:none}
-.wlogo{width:92px;height:92px;border-radius:26px;background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:flex;align-items:center;justify-content:center;font-size:44px;margin-bottom:20px;
+.wlogo{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:20px;
   box-shadow:0 14px 40px color-mix(in srgb,var(--accent) 35%,transparent)}
+.wlogo svg{width:34px;height:34px}
 .welcome h1{font-size:27px;font-weight:800;margin-bottom:8px}
 .welcome .sub{color:var(--muted);font-size:14.5px;line-height:1.8;max-width:330px;margin-bottom:22px}
-.welcome input{width:min(330px,100%);background:var(--card);border:1px solid var(--line);border-radius:15px;
-  padding:14px 16px;color:var(--text);font-size:16px;text-align:center;outline:none;margin-bottom:12px}
-.welcome .fine{font-size:11.5px;color:var(--muted);line-height:1.7;max-width:320px;margin-top:14px}
-.wbtn{width:min(330px,100%);padding:16px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+.welcome input{width:min(330px,100%);height:48px;background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:0 16px;color:var(--text);font-size:16px;text-align:center;outline:none;margin-bottom:12px}
+.welcome .fine{font-size:12px;color:var(--muted);line-height:1.7;max-width:320px;margin-top:14px}
+.wbtn{width:min(330px,100%);height:52px;padding:0;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:#fff;font-size:16.5px;font-weight:800}
-.sectionlabel{font-size:13px;font-weight:800;color:var(--muted);margin:16px 4px 8px;letter-spacing:.2px}
+.wskip{margin-top:10px;min-height:44px;padding:0 18px;color:var(--muted);font-weight:700;font-size:14.5px}
+.sectionlabel{font-size:12px;font-weight:800;color:var(--muted);margin:16px 4px 8px}
+/* redesign additions */
+.pbar{height:6px;border-radius:99px;background:var(--card2);margin-top:9px;overflow:hidden}
+.pfill{height:100%;border-radius:99px;transition:width .5s var(--spring)}
+.sheethead{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sheethead h3{margin-bottom:0}
+.sdots{display:flex;gap:6px;align-items:center}
+.sdot{width:8px;height:8px;border-radius:99px;background:var(--card2);border:1px solid var(--line);transition:all .25s}
+.sdot.on{width:22px;background:var(--accent);border-color:var(--accent)}
+.sdot.done{background:color-mix(in srgb,var(--accent) 45%,transparent);border-color:transparent}
+.btnrow.sticky{position:sticky;bottom:0;background:var(--card);padding-top:12px;padding-bottom:2px}
+.lead{display:flex;gap:11px;align-items:flex-start;min-width:0}
+.setic{color:var(--muted);flex:none;margin-top:2px}
+.setic svg{width:19px;height:19px}
+.dose .dot svg,.medrow .dot svg{width:22px;height:22px}
+#f_icons .chip{width:48px;height:48px;min-height:48px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+#f_icons .chip svg{width:21px;height:21px}
+.empty .ic svg{width:44px;height:44px;stroke-width:1.5}
+.confetti{position:fixed;top:34%;inset-inline-start:50%;z-index:80;pointer-events:none}
+.confetti i{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0;animation:conf 1.2s ease-out var(--d) forwards}
+@keyframes conf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),230px) rotate(340deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:380px){.htitle{font-size:26px}}
 </style>
 </head>
@@ -268,11 +298,12 @@ input[type=time]{background:var(--card2);border:1px solid var(--line);border-rad
   <div class="toast" id="toast"></div>
 
   <div class="welcome hide" id="welcome">
-    <div class="wlogo">💊</div>
+    <div class="wlogo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5 3.5 13.5a4.95 4.95 0 1 1 7-7l7 7a4.95 4.95 0 1 1-7 7Z"/><path d="m8.5 8.5 7 7"/></svg></div>
     <h1>أهلًا بيك في دوايا</h1>
     <p class="sub">دوايا بيفكّرك بمواعيد دواك ودواء اللي بتحبهم، ويتابع التزامك يوم بيوم. كل بياناتك بتتخزن على موبايلك بس.</p>
     <input type="text" id="wname" placeholder="اسمك (اختياري)" maxlength="30">
     <button class="wbtn" id="wstart">يلا نبدأ</button>
+    <button class="wskip" id="wskip">تخطَّ</button>
     <p class="fine">دوايا أداة تذكير فقط وليس بديلًا عن استشارة الطبيب أو الصيدلي. بضغطك على "يلا نبدأ" أنت موافق على ذلك.</p>
   </div>
 </div>
@@ -293,11 +324,39 @@ const $=q=>document.querySelector(q);
 const view=$('#view');
 let tab='today', editId=null;
 
-const ICONS=['💊','🩹','💉','🧴','🩸','🌡️','🫁','🧠','❤️','🦷','👁️','🦴'];
-const COLORS=['#10B981','#3B82F6','#8B5CF6','#F59E0B','#EF4444','#EC4899'];
+const ICON_KEYS=['pill','bandage','syringe','droplet','drop','thermo','lungs','brain','heart','tooth','eye','bone'];
+const ICON_SVG={
+  pill:'<path d="M10.5 20.5 3.5 13.5a4.95 4.95 0 1 1 7-7l7 7a4.95 4.95 0 1 1-7 7Z"/><path d="m8.5 8.5 7 7"/>',
+  bandage:'<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 6v12M18 6v12"/><path d="M10 10.01h.01M10 14.01h.01M14 10.01h.01M14 14.01h.01"/>',
+  syringe:'<path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3a2.4 2.4 0 1 1-3.4-3.4L15.6 5.6"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/>',
+  droplet:'<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
+  drop:'<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/><path d="M9.5 15a2.5 2.5 0 0 0 2.5 2.5"/>',
+  thermo:'<path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>',
+  lungs:'<path d="M12 3v6"/><path d="M9.8 9.2C8.5 8 6.3 8.4 5.4 10.2 4 13 3.2 16 3.2 17.8c0 1.2 1 2.2 2.2 2.2h2.4c1.3 0 2.2-1 2.2-2.2z"/><path d="M14.2 9.2c1.3-1.2 3.5-.8 4.4 1C20 13 20.8 16 20.8 17.8c0 1.2-1 2.2-2.2 2.2h-2.4c-1.3 0-2.2-1-2.2-2.2z"/>',
+  brain:'<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M12 5v13"/>',
+  heart:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  tooth:'<path d="M12 5.5c-1.5-1.5-3-2.5-5-2.5C4.5 3 3 4.8 3 7c0 4 2 6 2.5 9 .3 1.7.8 4 2 4 1.5 0 1.5-3 2-5 .3-1 .7-2 2.5-2s2.2 1 2.5 2c.5 2 .5 5 2 5 1.2 0 1.7-2.3 2-4 .5-3 2.5-5 2.5-9 0-2.2-1.5-4-4-4-2 0-3.5 1-5 2.5Z"/>',
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  bone:'<path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 .5.5 0 0 1-.5-.5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-7 7c-.7.7-1.69 0-2.5 0a2.5 2.5 0 0 0 0 5c.28 0 .5.22.5.5a2.5 2.5 0 1 0 5 0c0-.81-.7-1.8 0-2.5Z"/>'
+};
+const ICON_MIGRATE={'💊':'pill','🩹':'bandage','💉':'syringe','🧴':'droplet','🩸':'drop','🌡️':'thermo','🫁':'lungs','🧠':'brain','❤️':'heart','🦷':'tooth','👁️':'eye','🦴':'bone'};
+function iconSvg(k){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON_SVG[k]||ICON_SVG.pill}</svg>`;}
+const COLORS=['#0E9F6E','#3B82F6','#8B5CF6','#F59E0B','#EF4444','#EC4899'];
 const UNITS=['قرص','كبسولة','ملجم','مل','قطرة','حقنة','بخة','ملعقة'];
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 const DAYS_S=['أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
+const DAY_INIT=['ح','ن','ث','ر','خ','ج','س'];
+const UI_ICONS={
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  bulb:'<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>',
+  shield:'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/>',
+  down:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+  up:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>',
+  trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  box:'<rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9"/><path d="M10 13h4"/>'
+};
+function uiIcon(k){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${UI_ICONS[k]}</svg>`;}
 
 /* ============ helpers ============ */
 const pad=n=>String(n).padStart(2,'0');
@@ -312,12 +371,13 @@ function toAr(x){return String(x).replace(/[0-9]/g,d=>'٠١٢٣٤٥٦٧٨٩'[+d]
 function arDate(d){return d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||10);}catch(e){}}
-function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2200);}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),3000);}
 
 /* ============ doses ============ */
 function dosesFor(date){
   const out=[], dow=date.getDay(), dk=dkey(date);
   for(const m of S.meds){
+    if(m.paused)continue;
     if(m.days&&m.days.length&&!m.days.includes(dow))continue;
     for(const t of m.times){
       const k=dk+'|'+m.id+'|'+t;
@@ -376,7 +436,7 @@ function weekStrip(){
       else if(i===0){cls='part';mark=toAr(t);}
       else{cls='miss';mark=toAr(t+s);}
     }
-    html+=`<div class="wday"><div class="wdot ${cls} ${i===0?'today':''}">${mark}</div><div class="wlbl">${d.toLocaleDateString('ar-EG',{weekday:'narrow'})}</div></div>`;
+    html+=`<div class="wday"><div class="wdot ${cls} ${i===0?'today':''}">${mark}</div><div class="wlbl">${DAY_INIT[d.getDay()]}</div></div>`;
   }
   return html+'</div>';
 }
@@ -404,32 +464,33 @@ function render(){
 function renderToday(){
   const ds=dosesFor(new Date());
   if(!S.meds.length){
-    view.innerHTML=`<div class="empty"><div class="ic">💊</div><h3>مفيش أدوية لسه</h3><p>اضغط على "دواء جديد" وأضف أول دواء،<br>ودوايا هيفكّرك بمواعيده كل يوم.</p></div>`;
+    view.innerHTML=`<div class="empty"><div class="ic" style="color:var(--accent)">${iconSvg('pill')}</div><h3>مفيش أدوية لسه</h3><p>اضغط على "دواء جديد" وأضف أول دواء،<br>ودوايا هيفكّرك بمواعيده كل يوم.</p></div>`;
     return;
   }
   const taken=ds.filter(d=>d.status==='taken').length;
   const pct=ds.length?Math.round(taken/ds.length*100):0;
   const nd=nextDose();
   const missed=ds.filter(d=>!d.status&&d.time<pad(new Date().getHours())+':'+pad(new Date().getMinutes())&&d.time<pad((new Date().getHours()+23)%24)+':'+pad(new Date().getMinutes())&&pastMin(d.time)>60);
-  const low=S.meds.filter(m=>typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5));
-  const circ=2*Math.PI*36;
+  const low=S.meds.filter(m=>!m.paused&&typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5));
+  const circ=2*Math.PI*24;
+  const was=window._lastPct;window._lastPct=pct;
   let html=`<div class="card"><div class="hero">
-    <div class="ring"><svg width="86" height="86"><circle class="track" cx="43" cy="43" r="36" fill="none" stroke-width="8"/>
-    <circle class="bar" cx="43" cy="43" r="36" fill="none" stroke-width="8" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pct/100)}"/></svg>
-    <div class="pct">${toAr(pct)}٪</div></div>
+    <div class="ring"><svg width="56" height="56"><circle class="track" cx="28" cy="28" r="24" fill="none" stroke-width="5"/>
+    <circle class="bar" cx="28" cy="28" r="24" fill="none" stroke-width="5" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pct/100)}"/></svg>
+    <div class="pct"><bdi>${toAr(pct)}٪</bdi></div></div>
     <div class="heroinfo"><h2>${ds.length?`خدت ${toAr(taken)} من ${toAr(ds.length)} جرعات`:'مفيش جرعات النهاردة'}</h2>
-    <p>${pct===100&&ds.length?'يوم كامل، برافو عليك 🎉':ds.length?'كمل، كل جرعة بتوثّق التزامك.':'استريح، مفيش حاجة مجدولة.'}</p>
+    <p>${pct===100&&ds.length?'يوم كامل، برافو عليك 🎉':ds.length?'كمل، كل جرعة بتوثّق التزامك.':'استريح، مفيش حاجة مجدولة.'}</p></div>
     ${nd?`<span class="nextdose">⏰ الجرعة الجاية: ${esc(nd.med.name)} ${nd.when}</span>`:''}
     ${calcStreak()>0?`<span class="nextdose" style="background:color-mix(in srgb,var(--warn) 13%,transparent);color:var(--warn)">🔥 ${toAr(calcStreak())} ${calcStreak()===1?'يوم':'أيام'} التزام ورا بعض</span>`:''}
-    </div></div>${weekStrip()}</div>`;
-  if(missed.length)html+=`<div class="banner warn">⚠️<div>عندك ${toAr(missed.length)} ${missed.length===1?'جرعة فاتت':'جرعات فاتت'} من غير تسجيل. سجّلها لو خدتها، أو تخطَّها.</div></div>`;
-  for(const m of low)html+=`<div class="banner warn">🔔<div><b>${esc(m.name)}</b> قرب يخلص (فاضل ${toAr(m.pillsLeft)} ${m.unit}). جدّد العلبة في أقرب صيدلية.</div></div>`;
+    </div>${weekStrip()}</div>`;
+  if(missed.length)html+=`<div class="banner neutral">${uiIcon('clock')}<div>عندك ${toAr(missed.length)} ${missed.length===1?'جرعة فاتت':'جرعات فاتت'} من غير تسجيل. سجّلها لو خدتها، أو تخطَّها.</div></div>`;
+  for(const m of low)html+=`<div class="banner warn">${uiIcon('bell')}<div><b>${esc(m.name)}</b> قرب يخلص (فاضل ${toAr(m.pillsLeft)} ${m.unit}). جدّد العلبة في أقرب صيدلية.</div></div>`;
   html+=`<div class="dayhead">جدول النهاردة</div>`;
   if(!ds.length)html+=`<div class="empty" style="padding:26px"><p>مفيش جرعات مجدولة النهاردة.</p></div>`;
   for(const d of ds){
     html+=`<div class="card dose pressable ${d.status==='taken'?'taken':''}">
       <span class="timechip">${arTime(d.time)}</span>
-      <div class="dot" style="background:color-mix(in srgb,${d.med.color} 16%,transparent)">${d.med.icon}</div>
+      <div class="dot" style="background:color-mix(in srgb,${d.med.color} 12%,transparent);color:${d.med.color}">${iconSvg(d.med.icon)}</div>
       <div class="info"><div class="name">${esc(d.med.name)}</div><div class="sub">${esc(d.med.dose)} ${esc(d.med.unit)}${typeof d.med.pillsLeft==='number'?' • فاضل '+toAr(d.med.pillsLeft):''}</div></div>
       <div class="acts">
         <button class="pillbtn ok ${d.status==='taken'?'on':''}" onclick="act('${d.key}','${d.med.id}','${d.time}','taken')" aria-label="خدتها">✓</button>
@@ -441,6 +502,13 @@ function renderToday(){
     <div class="ads">هنا هيظهر إعلان بسيط يساعدنا نخلي دوايا مجاني للكل.<br>مش هيظهر أبدًا فوق أزرار الجرعات أو يحجبها.</div></div>`;
   }
   view.innerHTML=html;
+  if(pct===100&&ds.length&&was!==undefined&&was!==null&&was<100&&!matchMedia('(prefers-reduced-motion: reduce)').matches)confetti();
+}
+function confetti(){
+  const c=document.createElement('div');c.className='confetti';
+  const cols=['#0E9F6E','#F59E0B','#3B82F6','#EC4899','#16A34A'];
+  for(let i=0;i<26;i++){const s=document.createElement('i');s.style.setProperty('--x',(Math.random()*240-120)+'px');s.style.setProperty('--d',(Math.random()*.35).toFixed(2)+'s');s.style.background=cols[i%cols.length];c.appendChild(s);}
+  document.body.appendChild(c);setTimeout(()=>c.remove(),1700);
 }
 function pastMin(hm){const n=new Date();const[dh,dm]=hm.split(':').map(Number);return (n.getHours()*60+n.getMinutes())-(dh*60+dm);}
 window.act=(key,medId,time,st)=>{vibrate(12);logDose(key,medId,time,st);render();
@@ -449,18 +517,39 @@ window.act=(key,medId,time,st)=>{vibrate(12);logDose(key,medId,time,st);render()
   if(m&&S.profile.refill&&typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5)&&m.pillsLeft>=0)toast('⚠️ '+m.name+' قرب يخلص');
 };
 
-function renderMeds(){
-  if(!S.meds.length){view.innerHTML=`<div class="empty"><div class="ic">🗂️</div><h3>قايمة أدويتك فاضية</h3><p>أضف أدويتك بمواعيدها، وهتلاقيها هنا.</p></div>`;return;}
-  let html='';
-  for(const m of S.meds){
-    const lowT=typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5);
-    html+=`<div class="card medrow pressable" onclick="openSheet('${m.id}')">
-      <div class="dot" style="background:color-mix(in srgb,${m.color} 16%,transparent)">${m.icon}</div>
-      <div class="info"><div class="name">${esc(m.name)}${lowT?'<span class="tag low">قرب يخلص</span>':''}</div>
-      <div class="sub">${esc(m.dose)} ${esc(m.unit)} • ${m.times.map(arTime).join('، ')}<br>
-      <span class="tag">${m.days&&m.days.length?m.days.map(d=>DAYS_S[d]).join(' '):'كل يوم'}</span>${typeof m.pillsLeft==='number'?`<span class="tag">فاضل ${toAr(m.pillsLeft)}</span>`:''}</div></div>
-      <span class="chev">‹</span></div>`;
+function bestStreak(){
+  let best=0,cur=0;
+  for(let i=89;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=dosesFor(d);
+    if(!ds.length)continue;
+    const t=ds.filter(x=>x.status==='taken').length;
+    if(t===ds.length){cur++;if(cur>best)best=cur;}else cur=0;
   }
+  return best;
+}
+function timeGroup(t){const h=+t.split(':')[0];return h<12?0:h<17?1:2;}
+const GROUPS=['الصبح','الظهر','المساء'];
+function renderMeds(){
+  if(!S.meds.length){view.innerHTML=`<div class="empty"><div class="ic" style="color:var(--muted)">${uiIcon('box')}</div><h3>قايمة أدويتك فاضية</h3><p>أضف أدويتك بمواعيدها، وهتلاقيها هنا.</p></div>`;return;}
+  const groups=[[],[],[]];
+  for(const m of S.meds){const ts=m.times&&m.times.length?[...m.times].sort():['12:00'];groups[timeGroup(ts[0])].push(m);}
+  let html='';
+  groups.forEach((arr,gi)=>{
+    if(!arr.length)return;
+    html+=`<div class="dayhead">${GROUPS[gi]}</div>`;
+    for(const m of arr){
+      const lowT=typeof m.pillsLeft==='number'&&m.pillsLeft<=(m.refillAt??5);
+      const barPct=typeof m.pillsLeft==='number'?Math.max(4,Math.min(100,Math.round(m.pillsLeft/30*100))):null;
+      html+=`<div class="card medrow pressable" onclick="openSheet('${m.id}')">
+      <div class="dot" style="background:color-mix(in srgb,${m.color} 12%,transparent);color:${m.color}">${iconSvg(m.icon)}</div>
+      <div class="info"><div class="name">${esc(m.name)}${m.paused?'<span class="tag">متوقف مؤقتًا</span>':''}${lowT?'<span class="tag low">قرب يخلص</span>':''}</div>
+      <div class="sub">${esc(m.dose)} ${esc(m.unit)} • ${m.times.map(arTime).join('، ')}<br>
+      <span class="tag">${m.days&&m.days.length?m.days.map(d=>DAYS_S[d]).join(' '):'كل يوم'}</span>${typeof m.pillsLeft==='number'?`<span class="tag">فاضل ${toAr(m.pillsLeft)}</span>`:''}</div>
+      ${barPct!==null?`<div class="pbar"><div class="pfill" style="width:${barPct}%;background:${lowT?'var(--warn)':'var(--accent)'}"></div></div>`:''}</div>
+      <span class="chev">‹</span></div>`;
+    }
+  });
   view.innerHTML=html;
 }
 
@@ -476,15 +565,14 @@ function renderHistory(){
     if(x.n&&x.t===x.n){if(streakOn)streak++;}else if(x.n){streakOn=false;}}
   const rate=totAll?Math.round(totTaken/totAll*100):0;
   let html=`<div class="statrow">
-    <div class="stat"><div class="n">${toAr(rate)}٪</div><div class="l">نسبة الالتزام</div></div>
-    <div class="stat"><div class="n">${toAr(streak)}</div><div class="l">أيام متتالية كاملة 🔥</div></div>
-    <div class="stat"><div class="n">${toAr(totTaken)}</div><div class="l">جرعة مأخوذة</div></div></div>
+    <div class="stat"><div class="n"><bdi>${toAr(rate)}٪</bdi></div><div class="l">نسبة الالتزام</div></div>
+    <div class="stat"><div class="n">${toAr(bestStreak())}</div><div class="l">أفضل سلسلة أيام 🔥</div></div></div>
     <div class="card"><div class="dayhead" style="margin-top:2px">آخر ١٤ يوم</div><div class="bars">`;
   for(const x of days){
     const h=x.all?Math.max(8,Math.round(x.t/x.all*100)):(x.n?8:0);
-    html+=`<div class="barcol"><div class="bar ${x.n?'':'none'}" style="height:${x.n?h+'%':'3px'}" title="${x.t}/${x.n}"></div><div class="barday">${x.d.toLocaleDateString('ar-EG',{weekday:'narrow'})}</div></div>`;
+    html+=`<div class="barcol"><div class="bar ${x.n?'':'none'}" style="height:${x.n?h+'%':'3px'}" title="${x.t}/${x.n}"></div><div class="barday">${DAY_INIT[x.d.getDay()]}</div></div>`;
   }
-  html+=`</div></div><div class="banner info">💡<div>الالتزام بالدواء في معايده هو أهم حاجة لمفعوله. لو نسيت جرعة، سجّلها من صفحة اليوم.</div></div>`;
+  html+=`</div></div><div class="banner info">${uiIcon('bulb')}<div>الالتزام بالدواء في معايده هو أهم حاجة لمفعوله. لو نسيت جرعة، سجّلها من صفحة اليوم.</div></div>`;
   html+=`<div class="adcard"><span class="adtag">إعلان</span><div class="adt">مساحة إعلانية صغيرة</div>
   <div class="ads">إعلان بسيط تحت السجل، بعيد عن أي زرار مهم.</div></div>`;
   view.innerHTML=html;
@@ -515,14 +603,14 @@ function renderSettings(){
   </div>
   <div class="sectionlabel">الخصوصية والبيانات</div>
   <div class="card" style="padding:0">
-    <div class="setrow"><div><div class="t">بياناتك على موبايلك بس</div><div class="d">مفيش حساب ولا سيرفر ولا تتبع. اقرأ التفاصيل</div></div>
+    <div class="setrow"><div class="lead"><span class="setic">${uiIcon('shield')}</span><div><div class="t">بياناتك على موبايلك بس</div><div class="d">مفيش حساب ولا سيرفر ولا تتبع. اقرأ التفاصيل</div></div></div>
       <button class="linkrow" onclick="showPrivacy()">الخصوصية</button></div>
-    <div class="setrow"><div><div class="t">تصدير بياناتك</div><div class="d">ملف JSON بينزّل على موبايلك</div></div>
+    <div class="setrow"><div class="lead"><span class="setic">${uiIcon('down')}</span><div><div class="t">تصدير بياناتك</div><div class="d">ملف JSON بينزّل على موبايلك</div></div></div>
       <button class="linkrow" onclick="exportData()">تصدير</button></div>
-    <div class="setrow"><div><div class="t">استيراد نسخة احتياطية</div><div class="d">رجّع أدويتك وسجلّك من ملف تصدير</div></div>
+    <div class="setrow"><div class="lead"><span class="setic">${uiIcon('up')}</span><div><div class="t">استيراد نسخة احتياطية</div><div class="d">رجّع أدويتك وسجلّك من ملف تصدير</div></div></div>
       <button class="linkrow" onclick="document.getElementById('importfile').click()">استيراد</button>
       <input type="file" id="importfile" accept="application/json,.json" style="display:none" onchange="importData(event)"></div>
-    <div class="setrow"><div><div class="t">مسح كل البيانات</div><div class="d">يمسح الأدوية والسجل من على موبايلك نهائيًا</div></div>
+    <div class="setrow"><div class="lead"><span class="setic" style="color:var(--danger)">${uiIcon('trash')}</span><div><div class="t">مسح كل البيانات</div><div class="d">يمسح الأدوية والسجل من على موبايلك نهائيًا</div></div></div>
       <button class="linkrow" style="color:var(--danger)" onclick="confirmReset()">مسح</button></div>
   </div>
   <div class="sectionlabel">عام</div>
@@ -533,7 +621,7 @@ function renderSettings(){
       <span class="tag">قريبًا</span></div>
     <div class="setrow"><div><div class="t">تنبيه طبي</div><div class="d">دوايا للتذكير فقط وليس بديلًا عن استشارة الطبيب أو الصيدلي. مواعيد وجرعات الدواء مسؤوليتك أنت وطبيبك.</div></div></div>
   </div>
-  <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">دوايا • الإصدار ١٫٢</div>`;
+  <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">دوايا • الإصدار ١٫٣</div>`;
 }
 window.showPrivacy=()=>{
   showModal(`<h4>🔒 الخصوصية في دوايا</h4>
@@ -602,61 +690,82 @@ window.confirmReset=()=>{
 };
 window.doReset=()=>{const p=S.profile;S=fresh();S.profile.seen=p.seen;S.profile.name=p.name;save();closeModal();render();toast('اتمسح كل حاجة');};
 
-/* ============ sheet: add/edit med ============ */
-let form=null;
+/* ============ sheet: add/edit med (3 steps) ============ */
+let form=null, step=1;
 window.openSheet=(id)=>{
-  editId=id||null;
+  editId=id||null;step=1;
   const m=id?S.meds.find(x=>x.id===id):null;
-  form=m?JSON.parse(JSON.stringify(m)):{name:'',dose:'',unit:'قرص',times:[],days:[],icon:'💊',color:COLORS[Math.floor(Math.random()*COLORS.length)],pillsLeft:null,refillAt:5};
-  $('#sheetin').innerHTML=`<div class="grab"></div><h3>${m?'تعديل دواء':'دواء جديد'}</h3>
-    <div class="field"><label>اسم الدواء</label><input type="text" id="f_name" value="${esc(form.name)}" placeholder="مثال: جلوكوفاج، كونكور..." maxlength="50"></div>
+  form=m?JSON.parse(JSON.stringify(m)):{name:'',dose:'',unit:'قرص',times:[],days:[],icon:'pill',color:COLORS[Math.floor(Math.random()*COLORS.length)],pillsLeft:null,refillAt:5,paused:false};
+  renderSheet();
+  $('#overlay').classList.add('show');$('#sheet').classList.add('show');
+};
+function renderSheet(){
+  const m=!!editId;
+  const dots=[1,2,3].map(i=>`<span class="sdot ${i===step?'on':i<step?'done':''}"></span>`).join('');
+  let body='';
+  if(step===1){
+    body=`<div class="field"><label>اسم الدواء</label><input type="text" id="f_name" value="${esc(form.name)}" placeholder="مثال: جلوكوفاج، كونكور..." maxlength="50"></div>
     <div class="fieldrow">
       <div class="field"><label>الجرعة</label><input type="text" id="f_dose" value="${esc(form.dose)}" placeholder="1 أو 500" maxlength="10"></div>
       <div class="field"><label>الوحدة</label><select id="f_unit">${UNITS.map(u=>`<option ${form.unit===u?'selected':''}>${u}</option>`).join('')}</select></div>
     </div>
     <div class="field"><label>الأيقونة واللون</label>
-      <div class="chips" id="f_icons">${ICONS.map(ic=>`<button class="chip ${form.icon===ic?'on':''}" onclick="pickIcon('${ic}')">${ic}</button>`).join('')}</div>
-      <div class="swatches" style="margin-top:10px">${COLORS.map(c=>`<button class="sw ${form.color===c?'on':''}" id="sw_${c.slice(1)}" style="background:${c};color:${c}" onclick="pickColor('${c}')"></button>`).join('')}</div>
-    </div>
-    <div class="field"><label>مواعيد الجرعات</label>
+      <div class="chips" id="f_icons">${ICON_KEYS.map(ic=>`<button class="chip ${form.icon===ic?'on':''}" data-ic="${ic}" onclick="pickIcon('${ic}')">${iconSvg(ic)}</button>`).join('')}</div>
+      <div class="swatches" style="margin-top:12px">${COLORS.map(c=>`<button class="sw ${form.color===c?'on':''}" id="sw_${c.slice(1)}" style="background:${c};color:${c}" onclick="pickColor('${c}')"></button>`).join('')}</div>
+    </div>`;
+  }else if(step===2){
+    body=`<div class="field"><label>مواعيد الجرعات</label>
       <div style="display:flex;gap:8px;align-items:center"><input type="time" id="f_time"><button class="chip" onclick="addTime()">+ أضف المعاد</button></div>
       <div class="timechips" id="f_times"></div>
     </div>
     <div class="field"><label>التكرار</label>
       <div class="chips"><button class="chip ${!form.days.length?'on':''}" id="f_daily" onclick="pickDaily()">كل يوم</button>
       ${DAYS_S.map((d,i)=>`<button class="chip ${form.days.includes(i)?'on':''}" id="f_d${i}" onclick="pickDay(${i})">${d}</button>`).join('')}</div>
-    </div>
-    <div class="fieldrow">
+    </div>`;
+  }else{
+    body=`<div class="fieldrow">
       <div class="field"><label>عدد الوحدات المتبقية (اختياري)</label><input type="number" id="f_pills" min="0" max="999" placeholder="30" value="${form.pillsLeft??''}"></div>
       <div class="field"><label>فكّرني عند</label><input type="number" id="f_refill" min="0" max="99" value="${form.refillAt??5}"></div>
     </div>
-    <div class="btnrow">
-      ${m?`<button class="btn danger" onclick="delMed()">حذف</button>`:''}
-      <button class="btn ghost" onclick="closeSheet()">إلغاء</button>
-      <button class="btn primary" onclick="saveMed()">${m?'حفظ':'إضافة'}</button>
+    <div class="field"><label>الحالة</label>
+      <div class="chips"><button class="chip ${form.paused?'on':''}" id="f_pause" onclick="togglePause()">إيقاف مؤقت</button></div>
     </div>`;
-  renderTimes();
-  $('#overlay').classList.add('show');$('#sheet').classList.add('show');
-  setTimeout(()=>$('#f_name').focus(),350);
+  }
+  $('#sheetin').innerHTML=`<div class="grab"></div>
+    <div class="sheethead"><h3>${m?'تعديل دواء':'دواء جديد'}</h3><div class="sdots">${dots}</div></div>
+    ${body}
+    <div class="btnrow sticky">
+      ${m&&step===1?`<button class="btn danger" onclick="delMed()">حذف</button>`:''}
+      ${step>1?`<button class="btn ghost" onclick="goStep(${step-1})">رجوع</button>`:`<button class="btn ghost" onclick="closeSheet()">إلغاء</button>`}
+      ${step<3?`<button class="btn primary" onclick="goStep(${step+1})">التالي</button>`:`<button class="btn primary" onclick="saveMed()">${m?'حفظ':'إضافة'}</button>`}
+    </div>`;
+  if(step===2)renderTimes();
+  if(step===1)setTimeout(()=>{const f=$('#f_name');if(f)f.focus();},350);
+}
+window.goStep=s=>{
+  if(step===1&&s>1){
+    form.name=$('#f_name').value.trim();
+    form.dose=$('#f_dose').value.trim();
+    form.unit=$('#f_unit').value;
+    if(!form.name){toast('اكتب اسم الدواء');return;}
+  }
+  step=Math.min(3,Math.max(1,s));renderSheet();
 };
 function renderTimes(){
   $('#f_times').innerHTML=form.times.sort().map((t,i)=>`<span class="timechip2">${arTime(t)}<button onclick="rmTime(${i})">✕</button></span>`).join('')
     ||'<span style="font-size:12.5px;color:var(--muted)">ضيف معاد واحد على الأقل</span>';
 }
-window.pickIcon=ic=>{form.icon=ic;document.querySelectorAll('#f_icons .chip').forEach(c=>c.classList.toggle('on',c.textContent===ic));vibrate(8);};
+window.pickIcon=ic=>{form.icon=ic;document.querySelectorAll('#f_icons .chip').forEach(c=>c.classList.toggle('on',c.dataset.ic===ic));vibrate(8);};
 window.pickColor=c=>{form.color=c;document.querySelectorAll('.swatches .sw').forEach(s=>s.classList.remove('on'));const el=$('#sw_'+c.slice(1));if(el)el.classList.add('on');vibrate(8);};
 window.addTime=()=>{const v=$('#f_time').value;if(!v){toast('اختار المعاد الأول');return;}if(form.times.includes(v)){toast('المعاد موجود');return;}form.times.push(v);renderTimes();vibrate(10);};
 window.rmTime=i=>{form.times.splice(i,1);renderTimes();};
 window.pickDaily=()=>{form.days=[];$('#f_daily').classList.add('on');DAYS_S.forEach((_,i)=>$('#f_d'+i).classList.remove('on'));};
 window.pickDay=i=>{const ix=form.days.indexOf(i);if(ix>=0)form.days.splice(ix,1);else form.days.push(i);$('#f_d'+i).classList.toggle('on');$('#f_daily').classList.toggle('on',!form.days.length);};
+window.togglePause=()=>{form.paused=!form.paused;const b=$('#f_pause');if(b)b.classList.toggle('on',form.paused);vibrate(8);};
 window.saveMed=()=>{
-  form.name=$('#f_name').value.trim();
-  form.dose=$('#f_dose').value.trim();
-  form.unit=$('#f_unit').value;
   const pl=$('#f_pills').value;form.pillsLeft=pl===''?null:Math.max(0,parseInt(pl)||0);
   const ra=$('#f_refill').value;form.refillAt=ra===''?5:Math.max(0,parseInt(ra)||0);
-  if(!form.name){toast('اكتب اسم الدواء');return;}
-  if(!form.times.length){toast('ضيف معاد واحد على الأقل');return;}
+  if(!form.times.length){toast('ضيف معاد واحد على الأقل');goStep(2);return;}
   if(!form.dose)form.dose='1';
   if(editId){const i=S.meds.findIndex(x=>x.id===editId);S.meds[i]={...form,id:editId};}
   else{S.meds.push({...form,id:'m'+Date.now().toString(36)});}
@@ -681,10 +790,13 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();}
 function applyTheme(){
   const t=S.profile.theme==='auto'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):S.profile.theme;
   document.documentElement.dataset.theme=t;
-  document.querySelector('meta[name=theme-color]').content=t==='light'?'#F3F4F7':'#0B0D12';
+  document.querySelector('meta[name=theme-color]').content=t==='light'?'#FAF8F4':'#0F1512';
+  applyAccent();
 }
 function applyAccent(){
-  const a=S.profile.accent;document.documentElement.style.setProperty('--accent',a);
+  let a=S.profile.accent;
+  if(document.documentElement.dataset.theme==='dark'&&a==='#0E9F6E')a='#34D399';
+  document.documentElement.style.setProperty('--accent',a);
   document.documentElement.style.setProperty('--accent2',shade(a,-18));
 }
 function shade(hex,p){const n=parseInt(hex.slice(1),16),f=v=>Math.max(0,Math.min(255,v));
@@ -720,12 +832,25 @@ if(!S.profile.seen){$('#welcome').classList.remove('hide');}
 $('#wstart').addEventListener('click',()=>{
   S.profile.name=$('#wname').value.trim();S.profile.seen=true;save();
   $('#welcome').classList.add('hide');render();
-  setTimeout(()=>openSheet(null),400);
+});
+$('#wskip').addEventListener('click',()=>{
+  S.profile.seen=true;save();
+  $('#welcome').classList.add('hide');render();
 });
 
 /* ============ boot ============ */
+(function migrate(){
+  let changed=false;
+  for(const m of S.meds){
+    if(ICON_MIGRATE[m.icon]){m.icon=ICON_MIGRATE[m.icon];changed=true;}
+    else if(!ICON_SVG[m.icon]){m.icon='pill';changed=true;}
+  }
+  if(S.profile.accent==='#10B981'){S.profile.accent='#0E9F6E';changed=true;}
+  if(changed)save();
+})();
 applyTheme();applyAccent();render();
 (function(){if(!('serviceWorker' in navigator))return;var had=!!navigator.serviceWorker.controller,busy=false;function editing(){var a=document.activeElement;return !!((a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||document.querySelector('#sheet.show,#modal.show'));}function go(){try{sessionStorage.setItem('sw-updated','1');}catch(e){}location.reload();}navigator.serviceWorker.addEventListener('controllerchange',function(){if(!had){had=true;return;}if(busy)return;if(!editing()){go();return;}busy=true;var t=setInterval(function(){if(!editing()){clearInterval(t);go();}},1000);});navigator.serviceWorker.register('sw.js').then(function(r){function up(){try{r.update();}catch(e){}}up();setInterval(up,600000);document.addEventListener('visibilitychange',function(){if(!document.hidden)up();});}).catch(function(){});try{if(sessionStorage.getItem('sw-updated')){sessionStorage.removeItem('sw-updated');setTimeout(function(){if(typeof toast==='function')toast('اتحدّث لآخر نسخة ✅');},600);}}catch(e){}})();
 </script>
 </body>
 </html>
+
